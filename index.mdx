@@ -1,23 +1,7 @@
 ---
-
 title: "Introduction"
 description: "Get started with the Agent Tool Protocol (ATP)"
 sidebarTitle: "Introduction"
-----------------------------
-
-# Introduction
-
-> Build tools LLMs can call like APIs, locally or in the cloud.
-
-ATP (Agent Tool Protocol) is a developer-first standard that turns your functions into tools LLMs can call via ChatATP. Think of ATP as the **SDK + runtime** for deploying capabilities to your AI assistant or agent.
-
-It enables:
-
-* 🧠 Building AI agents powered by ToolKits
-* 🔌 A plug-and-play ToolKit architecture for LLMs
-* 🔐 Secure integration with APIs, databases, or files
-* ☁️ Cloud-hosted or local deployment of tools callable by LLMs
-
 ---
 
 ## How ATP Works
@@ -33,9 +17,9 @@ flowchart LR
     ToolKit2 -->|@register_tool| ToolB["Function B"]
 ```
 
-* **ChatATP Agent**: The orchestrator that selects and routes tools to call
-* **ToolKits**: Your custom packages of capabilities, created with the `atp` SDK
-* **Tools**: Functions exposed with the `@register_tool` decorator
+- **ChatATP Agent**: The orchestrator that selects and routes tools to call
+- **ToolKits**: Your custom packages of capabilities, created with the `atp` SDK
+- **Tools**: Functions exposed with the `@register_tool` decorator
 
 ---
 
@@ -47,7 +31,6 @@ Choose your path to begin:
   <Card title="Build a ToolKit" icon="rocket" href="/quickstart/toolkit">
     Start with the ATP SDK and build tools callable by AI
   </Card>
-
   <Card title="Use ChatATP" icon="message" href="/quickstart/user">
     Start interacting with ToolKits through ChatATP
   </Card>
@@ -61,15 +44,12 @@ Choose your path to begin:
   <Card title="Example ToolKits" icon="grid" href="/examples">
     See what kinds of ToolKits are already built
   </Card>
-
   <Card title="ToolKit Workshop (2hr Video)" icon="person-chalkboard" href="https://www.youtube.com/watch?v=kQmXtrmQ5Zg">
     A full walkthrough for building, testing, and deploying ATP ToolKits
   </Card>
-
   <Card title="Using APIs with ATP" icon="network-wired" href="/tutorials/api-tools">
     Wrap third-party APIs into tools for LLMs to call
   </Card>
-
   <Card title="Building Local Tools" icon="wrench" href="/tutorials/local-tools">
     Access local files, DBs, and scripts through ATP
   </Card>
@@ -83,23 +63,18 @@ Choose your path to begin:
   <Card title="What is a ToolKit?" icon="box" href="/docs/concepts/toolkit">
     Learn the structure and lifecycle of a ToolKit
   </Card>
-
   <Card title="Tools and Decorators" icon="code" href="/docs/concepts/tools">
     Register and describe functions with metadata
   </Card>
-
   <Card title="ToolKit Store" icon="store" href="/docs/concepts/store">
     Discover and share ToolKits publicly or privately
   </Card>
-
   <Card title="Deployments" icon="cloud" href="/docs/concepts/deployments">
     Run ToolKits in the cloud or on your local machine
   </Card>
-
   <Card title="LLM Integration" icon="robot" href="/docs/concepts/integration">
     Let ToolKits be called by any model via ChatATP
   </Card>
-
   <Card title="ToolKit Collection" icon="layer-group" href="/docs/concepts/collection">
     How users organize and reuse ToolKits across sessions
   </Card>
@@ -111,17 +86,17 @@ Choose your path to begin:
 
 ATP is open to contributors:
 
-* 📦 [SDK source](https://github.com/agenttoolprotocol/atp-sdk)
-* 🛠️ [Contribute a ToolKit](/development/contributing)
-* 🔧 [File issues](https://github.com/agenttoolprotocol)
+- 📦 [SDK source](https://github.com/agenttoolprotocol/atp-sdk)
+- 🛠️ [Contribute a ToolKit](/development/contributing)
+- 🔧 [File issues](https://github.com/agenttoolprotocol)
 
 ---
 
 ## Feedback & Support
 
-* 🐛 [Bug Reports & Requests](https://github.com/agenttoolprotocol)
-* 💬 [Community Discussions](https://github.com/orgs/agenttoolprotocol/discussions)
-* 🧠 [ChatATP Support](https://chatatp.ai/support)
+- 🐛 [Bug Reports & Requests](https://github.com/agenttoolprotocol)
+- 💬 [Community Discussions](https://github.com/orgs/agenttoolprotocol/discussions)
+- 🧠 [ChatATP Support](https://chatatp.ai/support)
 
 ---
 
