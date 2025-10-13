@@ -8,7 +8,7 @@ description: "Register and serve Python functions as tools via WebSocket"
 The `ToolKitClient` class allows you to register Python functions as tools and serve them via WebSocket. It handles:
 
 - **Tool registration** with metadata
-- **WebSocket connection** to the ATP server
+- **WebSocket(WS(S))/Hyper Text Transfer Protocol(HTTP(S)) connection** to the ATP server
 - **Tool invocation** with parameter validation
 - **OAuth2 token injection** for authenticated tools
 - **Automatic reconnection** on connection loss
@@ -23,21 +23,21 @@ from atp_sdk.clients import ToolKitClient
 client = ToolKitClient(
     api_key: str,
     app_name: str,
-    base_url: str = "https://chatatp-backend.onrender.com"
+    base_url: str = "https://api.chat-atp.com"
 )
 ```
 
 ### Parameters
 
 <ParamField path="api_key" type="string" required>
-  Your ATP API key. Get it from the [ATP Dashboard](https://chatatp-backend.onrender.com).
+  Your ATP Toolkit API key. Get it from the [ATP Dashboard](https://developers.chat-atp.com/signin).
 </ParamField>
 
 <ParamField path="app_name" type="string" required>
   Name of your application/toolkit. This will be used to identify your toolkit on the ATP platform.
 </ParamField>
 
-<ParamField path="base_url" type="string" default="https://chatatp-backend.onrender.com">
+<ParamField path="base_url" type="string" default="https://api.chat-atp.com.com">
   ATP Server backend URL. Use the default unless you're running a custom ATP server.
 </ParamField>
 

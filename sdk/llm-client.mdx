@@ -23,21 +23,21 @@ from atp_sdk.clients import LLMClient
 llm_client = LLMClient(
     api_key: str,
     protocol: str = "ws",
-    base_url: str = "https://chatatp-backend.onrender.com/ws/v1/atp/llm-client/"
+    base_url: str = "https://api.chat-atp.com/ws/v1/atp/llm-client/"
 )
 ```
 
 ### Parameters
 
 <ParamField path="api_key" type="string" required>
-  Your ATP API key. Get it from the [ATP Dashboard](https://chatatp-backend.onrender.com).
+  Your ATP API key. Get it from the [ATP Dashboard](https://developers.chat-atp.com).
 </ParamField>
 
 <ParamField path="protocol" type="string" default="ws">
   Protocol to use ("ws" for WebSocket or "http" for HTTP).
 </ParamField>
 
-<ParamField path="base_url" type="string" default="https://chatatp-backend.onrender.com/ws/v1/atp/llm-client/">
+<ParamField path="base_url" type="string" default="https://developers.chat-atp.com/ws/v1/atp/llm-client/">
   ATP server URL. Use the default unless you're running a custom ATP server.
 </ParamField>
 
