@@ -271,7 +271,7 @@ import openai
 from atp_sdk.clients import LLMClient
 
 openai_client = openai.OpenAI(api_key="YOUR_OPENAI_API_KEY")
-llm_client = LLMClient(api_key="YOUR_ATP_API_KEY")
+llm_client = LLMClient(api_key="YOUR_ATP_LLM_CLIENT_API_KEY")
 
 # Get toolkit context
 context = llm_client.get_toolkit_context(
@@ -315,7 +315,7 @@ import anthropic
 from atp_sdk.clients import LLMClient
 
 anthropic_client = anthropic.Anthropic(api_key="YOUR_ANTHROPIC_API_KEY")
-llm_client = LLMClient(api_key="YOUR_ATP_API_KEY")
+llm_client = LLMClient(api_key="YOUR_ATP_LLM_CLIENT_API_KEY")
 
 # Get toolkit context
 context = llm_client.get_toolkit_context(
@@ -363,7 +363,7 @@ from mistralai.client import MistralClient
 from atp_sdk.clients import LLMClient
 
 mistral_client = MistralClient(api_key="YOUR_MISTRAL_API_KEY")
-llm_client = LLMClient(api_key="YOUR_ATP_API_KEY")
+llm_client = LLMClient(api_key="YOUR_ATP_LLM_CLIENT_API_KEY")
 
 # Get toolkit context
 context = llm_client.get_toolkit_context(
@@ -401,7 +401,7 @@ if tool_calls:
 ```python
 from atp_sdk.clients import LLMClient
 
-llm_client = LLMClient(api_key="YOUR_ATP_API_KEY")
+llm_client = LLMClient(api_key="YOUR_ATP_LLM_CLIENT_API_KEY")
 
 # Step 1: Initiate OAuth connection
 connection = llm_client.initiate_oauth_connection(

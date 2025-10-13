@@ -36,7 +36,7 @@ This section provides practical examples of using ATP for various use cases. Eac
 from atp_sdk.clients import ToolKitClient
 
 client = ToolKitClient(
-    api_key="YOUR_ATP_API_KEY",
+    api_key="YOUR_ATP_TOOLKIT_API_KEY",
     app_name="my_app"
 )
 
@@ -64,7 +64,7 @@ import requests
 from atp_sdk.clients import ToolKitClient
 
 client = ToolKitClient(
-    api_key="YOUR_ATP_API_KEY",
+    api_key="YOUR_ATP_TOOLKIT_API_KEY",
     app_name="hubspot_toolkit"
 )
 
@@ -96,7 +96,7 @@ import openai
 from atp_sdk.clients import LLMClient
 
 openai_client = openai.OpenAI(api_key="YOUR_OPENAI_API_KEY")
-llm_client = LLMClient(api_key="YOUR_ATP_API_KEY")
+llm_client = LLMClient(api_key="YOUR_ATP_LLM_CLIENT_API_KEY")
 
 # Get toolkit context
 context = llm_client.get_toolkit_context(
