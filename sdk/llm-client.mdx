@@ -294,15 +294,11 @@ response = openai_client.chat.completions.create(
 # Extract and execute tool calls
 tool_calls = response.choices[0].message.tool_calls
 
-for tool_call in tool_calls:
-    tool_call_json = {
-        "function": tool_call.function.name,
-        "parameters": tool_call.function.arguments
-    }
+if tool_calls:
 
     result = llm_client.call_tool(
         toolkit_id="your_toolkit_id",
-        json_response=tool_call_json,
+        json_response=tool_calls,
         provider="openai",
         user_prompt="Create a company and then list contacts."
     )
@@ -386,15 +382,11 @@ response = mistral_client.chat(
 # Extract and execute tool calls
 tool_calls = response.choices[0].message.tool_calls
 
-for tool_call in tool_calls:
-    tool_call_json = {
-        "function": tool_call.function.name,
-        "parameters": tool_call.function.arguments
-    }
+if tool_calls:
 
     result = llm_client.call_tool(
         toolkit_id="your_toolkit_id",
-        json_response=tool_call_json,
+        json_response=tool_calls,
         provider="mistralai",
         user_prompt="Create a company and then list contacts."
     )

@@ -116,14 +116,13 @@ response = openai_client.chat.completions.create(
     tool_choice="auto"
 )
 
+tool_calls = response.choices[0].message.tool_calls
+
 # Execute tool calls
-for tool_call in response.choices[0].message.tool_calls:
+if tool_calls:
     result = llm_client.call_tool(
         toolkit_id="your_toolkit_id",
-        json_response={
-            "function": tool_call.function.name,
-            "parameters": tool_call.function.arguments
-        },
+        tool_calls=tool_calls,
         provider="openai",
         user_prompt="Say hello to Alice."
     )

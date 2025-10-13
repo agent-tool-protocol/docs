@@ -50,26 +50,6 @@
             ]
           }
         ]
-      },
-      {
-        "tab": "API Reference",
-        "groups": [
-          {
-            "group": "API Documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint Examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ]
-          }
-        ]
       }
     ],
     "global": {
@@ -106,7 +86,7 @@
     "primary": {
       "type": "button",
       "label": "Get API Key",
-      "href": "https://chatatp-backend.onrender.com"
+      "href": "https://developers.chat-atp.com/signin"
     }
   },
   "footer": {
