@@ -113,7 +113,7 @@ Executes a tool or workflow on the ATP server.
 ```python
 response = llm_client.call_tool(
     toolkit_id: str,
-    json_response: str | dict,
+    tool_calls: str | dict,
     provider: str,
     user_prompt: str
 )
@@ -125,7 +125,7 @@ response = llm_client.call_tool(
   Unique ID of the toolkit.
 </ParamField>
 
-<ParamField path="json_response" type="string | dict" required>
+<ParamField path="tool_calls" type="string | dict" required>
   JSON payload from an LLM containing the tool call. Can be a string or dict.
   
   Example:
@@ -298,7 +298,7 @@ if tool_calls:
 
     result = llm_client.call_tool(
         toolkit_id="your_toolkit_id",
-        json_response=tool_calls,
+        tool_calls=tool_calls,
         provider="openai",
         user_prompt="Create a company and then list contacts."
     )
@@ -337,21 +337,16 @@ response = anthropic_client.messages.create(
 # Extract and execute tool calls
 tool_calls = response.content
 
-for tool_call in tool_calls:
-    if tool_call.type == "tool_use":
-        tool_call_json = {
-            "function": tool_call.name,
-            "parameters": tool_call.input
-        }
+if tool_calls[-1].type == "tool_calls":
 
-        result = llm_client.call_tool(
-            toolkit_id="your_toolkit_id",
-            json_response=tool_call_json,
-            provider="anthropic",
-            user_prompt="Create a company and then list contacts."
-        )
+    result = llm_client.call_tool(
+        toolkit_id="your_toolkit_id",
+        tool_calls=tool_calls[-1].content,
+        provider="anthropic",
+        user_prompt="Create a company and then list contacts."
+    )
 
-        print(f"Tool call result: {result}")
+    print(f"Tool call result: {result}")
 ```
 
 ---
@@ -386,7 +381,7 @@ if tool_calls:
 
     result = llm_client.call_tool(
         toolkit_id="your_toolkit_id",
-        json_response=tool_calls,
+        tool_calls=tool_calls,
         provider="mistralai",
         user_prompt="Create a company and then list contacts."
     )
