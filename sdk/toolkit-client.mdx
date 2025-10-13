@@ -1,0 +1,357 @@
+---
+title: "ToolKitClient"
+description: "Register and serve Python functions as tools via WebSocket"
+---
+
+## Overview
+
+The `ToolKitClient` class allows you to register Python functions as tools and serve them via WebSocket. It handles:
+
+- **Tool registration** with metadata
+- **WebSocket connection** to the ATP server
+- **Tool invocation** with parameter validation
+- **OAuth2 token injection** for authenticated tools
+- **Automatic reconnection** on connection loss
+
+---
+
+## Constructor
+
+```python
+from atp_sdk.clients import ToolKitClient
+
+client = ToolKitClient(
+    api_key: str,
+    app_name: str,
+    base_url: str = "https://chatatp-backend.onrender.com"
+)
+```
+
+### Parameters
+
+<ParamField path="api_key" type="string" required>
+  Your ATP API key. Get it from the [ATP Dashboard](https://chatatp-backend.onrender.com).
+</ParamField>
+
+<ParamField path="app_name" type="string" required>
+  Name of your application/toolkit. This will be used to identify your toolkit on the ATP platform.
+</ParamField>
+
+<ParamField path="base_url" type="string" default="https://chatatp-backend.onrender.com">
+  ATP Server backend URL. Use the default unless you're running a custom ATP server.
+</ParamField>
+
+---
+
+## Methods
+
+### register_tool
+
+Registers a Python function as a tool with the ATP platform.
+
+```python
+@client.register_tool(
+    function_name: str,
+    params: list[str],
+    required_params: list[str],
+    description: str,
+    auth_provider: Optional[str] = None,
+    auth_type: Optional[str] = None,
+    auth_with: Optional[str] = None
+)
+def my_tool(**kwargs):
+    ...
+```
+
+#### Parameters
+
+<ParamField path="function_name" type="string" required>
+  Unique name for the tool. This is how the LLM will reference the tool.
+</ParamField>
+
+<ParamField path="params" type="list[str]" required>
+  List of all parameter names the tool accepts.
+</ParamField>
+
+<ParamField path="required_params" type="list[str]" required>
+  List of required parameter names. The tool will fail if these are not provided.
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Human-readable description of what the tool does. This helps the LLM understand when to use the tool.
+</ParamField>
+
+<ParamField path="auth_provider" type="string" optional>
+  Name of OAuth2 provider (e.g., "hubspot", "google", "salesforce"). Set to `None` if no authentication is required.
+</ParamField>
+
+<ParamField path="auth_type" type="string" optional>
+  Authentication type (e.g., "OAuth2", "apiKey"). Set to `None` if no authentication is required.
+</ParamField>
+
+<ParamField path="auth_with" type="string" optional>
+  Name of the token parameter (e.g., "access_token", "api_key"). Set to `None` if no authentication is required.
+</ParamField>
+
+#### Returns
+
+A decorator to wrap your function.
+
+---
+
+### start
+
+Starts the WebSocket client and begins listening for tool requests.
+
+```python
+client.start()
+```
+
+<Warning>
+  This method blocks the main thread. Make sure all tools are registered before calling `start()`.
+</Warning>
+
+---
+
+### stop
+
+Stops the WebSocket client and closes the connection.
+
+```python
+client.stop()
+```
+
+---
+
+## Tool Function Requirements
+
+Your tool functions must follow these requirements:
+
+1. **Accept `**kwargs`**: All parameters must be passed as keyword arguments.
+2. **Return serializable data**: Return a dict, str, list, or other JSON-serializable type.
+3. **Handle `auth_token`**: If your tool requires authentication, expect `auth_token` in `kwargs`.
+
+### Example Tool Function
+
+```python
+def my_tool(**kwargs):
+    # Get parameters
+    param1 = kwargs.get('param1')
+    param2 = kwargs.get('param2')
+    
+    # Get auth token (if required)
+    auth_token = kwargs.get('auth_token')
+    
+    # Do something
+    result = do_something(param1, param2, auth_token)
+    
+    # Return serializable data
+    return {"result": result}
+```
+
+---
+
+## Examples
+
+### Minimal Tool (No Authentication)
+
+```python
+from atp_sdk.clients import ToolKitClient
+
+client = ToolKitClient(
+    api_key="YOUR_ATP_API_KEY",
+    app_name="my_app"
+)
+
+@client.register_tool(
+    function_name="echo",
+    params=['text'],
+    required_params=['text'],
+    description="Echoes the input text.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def echo(**kwargs):
+    return {"echo": kwargs.get('text')}
+
+client.start()
+```
+
+---
+
+### Tool with OAuth2 Authentication
+
+```python
+import requests
+from atp_sdk.clients import ToolKitClient
+
+client = ToolKitClient(
+    api_key="YOUR_ATP_API_KEY",
+    app_name="hubspot_toolkit"
+)
+
+@client.register_tool(
+    function_name="create_company",
+    params=['name', 'domain', 'industry'],
+    required_params=['name', 'domain', 'industry'],
+    description="Creates a company in HubSpot.",
+    auth_provider="hubspot",
+    auth_type="OAuth2",
+    auth_with="access_token"
+)
+def create_company(**kwargs):
+    access_token = kwargs.get('auth_token')
+    url = "https://api.hubapi.com/crm/v3/objects/companies"
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "properties": {
+            "name": kwargs.get('name'),
+            "domain": kwargs.get('domain'),
+            "industry": kwargs.get('industry')
+        }
+    }
+    response = requests.post(url, json=data, headers=headers)
+    return response.json()
+
+client.start()
+```
+
+---
+
+### Multiple Tools
+
+You can register multiple tools with the same client:
+
+```python
+from atp_sdk.clients import ToolKitClient
+
+client = ToolKitClient(
+    api_key="YOUR_ATP_API_KEY",
+    app_name="my_toolkit"
+)
+
+@client.register_tool(
+    function_name="tool1",
+    params=['param1'],
+    required_params=['param1'],
+    description="First tool.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def tool1(**kwargs):
+    return {"result": "tool1"}
+
+@client.register_tool(
+    function_name="tool2",
+    params=['param2'],
+    required_params=['param2'],
+    description="Second tool.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def tool2(**kwargs):
+    return {"result": "tool2"}
+
+client.start()
+```
+
+---
+
+## Error Handling
+
+The ATP SDK automatically handles errors and returns them in a standardized format:
+
+### Missing Required Parameters
+
+```json
+{
+  "error": "Missing required parameter: name"
+}
+```
+
+### Missing Auth Token
+
+```json
+{
+  "error": "Missing auth_token for authenticated tool"
+}
+```
+
+### Function Exception
+
+```json
+{
+  "error": "Error message from exception"
+}
+```
+
+---
+
+## WebSocket Events
+
+### Tool Registration
+
+When you call `client.start()`, all registered tools are announced to the ATP backend.
+
+### Tool Invocation
+
+When a tool request is received, your function is called with the provided parameters and (if needed) `auth_token`.
+
+**Example incoming message:**
+
+```json
+{
+  "message_type": "atp_tool_request",
+  "payload": {
+    "request_id": "uuid",
+    "tool_name": "create_company",
+    "params": {
+      "name": "Acme",
+      "domain": "acme.com",
+      "industry": "Tech"
+    },
+    "auth_token": "ACCESS_TOKEN"
+  }
+}
+```
+
+---
+
+## Advanced Usage
+
+### Custom Backend
+
+If you're running a custom ATP server, you can specify the base URL:
+
+```python
+client = ToolKitClient(
+    api_key="YOUR_API_KEY",
+    app_name="my_app",
+    base_url="https://your-backend.example.com"
+)
+```
+
+---
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="LLMClient" icon="robot" href="/sdk/llm-client">
+    Connect LLMs to your toolkits
+  </Card>
+  <Card title="OAuth2 Guide" icon="lock" href="/guides/oauth">
+    Set up OAuth2 authentication
+  </Card>
+  <Card title="Framework Integration" icon="code" href="/integrations/overview">
+    Use ATP with Django, FastAPI, or Flask
+  </Card>
+  <Card title="Examples" icon="lightbulb" href="/examples/overview">
+    Explore more examples
+  </Card>
+</CardGroup>

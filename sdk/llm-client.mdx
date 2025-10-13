@@ -1,0 +1,458 @@
+---
+title: "LLMClient"
+description: "Connect LLMs to your toolkits and execute tool calls"
+---
+
+## Overview
+
+The `LLMClient` lets you connect to the ATP Agent Server, retrieve toolkit context, and execute tools or workflows using JSON payloads—perfect for LLM-based agents.
+
+It supports:
+
+- **OpenAI** (GPT-4, GPT-3.5, etc.)
+- **Anthropic** (Claude 3 Opus, Sonnet, Haiku)
+- **Mistral AI** (Mistral Large, Medium, Small)
+
+---
+
+## Constructor
+
+```python
+from atp_sdk.clients import LLMClient
+
+llm_client = LLMClient(
+    api_key: str,
+    protocol: str = "ws",
+    base_url: str = "https://chatatp-backend.onrender.com/ws/v1/atp/llm-client/"
+)
+```
+
+### Parameters
+
+<ParamField path="api_key" type="string" required>
+  Your ATP API key. Get it from the [ATP Dashboard](https://chatatp-backend.onrender.com).
+</ParamField>
+
+<ParamField path="protocol" type="string" default="ws">
+  Protocol to use ("ws" for WebSocket or "http" for HTTP).
+</ParamField>
+
+<ParamField path="base_url" type="string" default="https://chatatp-backend.onrender.com/ws/v1/atp/llm-client/">
+  ATP server URL. Use the default unless you're running a custom ATP server.
+</ParamField>
+
+---
+
+## Methods
+
+### get_toolkit_context
+
+Retrieves the toolkit context and system instructions for a given toolkit and user prompt.
+
+```python
+context = llm_client.get_toolkit_context(
+    toolkit_id: str,
+    provider: str,
+    user_prompt: str
+)
+```
+
+#### Parameters
+
+<ParamField path="toolkit_id" type="string" required>
+  Unique ID of the toolkit you want to use.
+</ParamField>
+
+<ParamField path="provider" type="string" required>
+  The LLM provider: `"openai"`, `"anthropic"`, or `"mistralai"`.
+</ParamField>
+
+<ParamField path="user_prompt" type="string" required>
+  The user's prompt or task description.
+</ParamField>
+
+#### Returns
+
+A dictionary containing the toolkit context, including provider-specific tool schemas.
+
+**Example response:**
+
+```json
+{
+  "toolkit_id": "your_toolkit_id",
+  "toolkit_name": "Example Toolkit",
+  "caption": "Example Caption",
+  "provider": "openai",
+  "tools": [
+    {
+      "type": "function",
+      "name": "hello_world",
+      "description": "Returns a greeting.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name to greet"
+          }
+        },
+        "required": ["name"]
+      }
+    }
+  ],
+  "user_prompt": "What do you want to achieve?"
+}
+```
+
+---
+
+### call_tool
+
+Executes a tool or workflow on the ATP server.
+
+```python
+response = llm_client.call_tool(
+    toolkit_id: str,
+    json_response: str | dict,
+    provider: str,
+    user_prompt: str
+)
+```
+
+#### Parameters
+
+<ParamField path="toolkit_id" type="string" required>
+  Unique ID of the toolkit.
+</ParamField>
+
+<ParamField path="json_response" type="string | dict" required>
+  JSON payload from an LLM containing the tool call. Can be a string or dict.
+  
+  Example:
+  ```json
+  {
+    "function": "hello_world",
+    "parameters": {"name": "Alice"}
+  }
+  ```
+</ParamField>
+
+<ParamField path="provider" type="string" required>
+  The LLM provider: `"openai"`, `"anthropic"`, or `"mistralai"`.
+</ParamField>
+
+<ParamField path="user_prompt" type="string" required>
+  Additional user input to include in the execution.
+</ParamField>
+
+#### Returns
+
+The result of the tool execution.
+
+**Example response:**
+
+```json
+{
+  "result": {
+    "message": "Hello, Alice!"
+  }
+}
+```
+
+---
+
+## OAuth2 Methods
+
+### initiate_oauth_connection
+
+Starts the OAuth flow and returns an authorization URL for the user.
+
+```python
+connection = llm_client.initiate_oauth_connection(
+    platform_id: str,
+    external_user_id: str,
+    developer_redirect_url: str
+)
+```
+
+#### Parameters
+
+<ParamField path="platform_id" type="string" required>
+  The platform ID (e.g., "hubspot", "google", "salesforce").
+</ParamField>
+
+<ParamField path="external_user_id" type="string" required>
+  Your user's unique identifier (e.g., email address).
+</ParamField>
+
+<ParamField path="developer_redirect_url" type="string" required>
+  The URL to redirect the user to after OAuth authorization.
+</ParamField>
+
+#### Returns
+
+```json
+{
+  "authorization_url": "https://oauth-provider.com/authorize?..."
+}
+```
+
+---
+
+### wait_for_connection
+
+Polls for OAuth connection completion and retrieves the integration ID.
+
+```python
+account = llm_client.wait_for_connection(
+    platform_id: str,
+    external_user_id: str
+)
+```
+
+#### Parameters
+
+<ParamField path="platform_id" type="string" required>
+  The platform ID (e.g., "hubspot", "google", "salesforce").
+</ParamField>
+
+<ParamField path="external_user_id" type="string" required>
+  Your user's unique identifier (e.g., email address).
+</ParamField>
+
+#### Returns
+
+```json
+{
+  "integration_id": "uuid"
+}
+```
+
+---
+
+### get_user_tokens
+
+Fetches the user's access and refresh tokens for use in tool calls.
+
+```python
+tokens = llm_client.get_user_tokens(
+    platform_id: str,
+    external_user_id: str
+)
+```
+
+#### Parameters
+
+<ParamField path="platform_id" type="string" required>
+  The platform ID (e.g., "hubspot", "google", "salesforce").
+</ParamField>
+
+<ParamField path="external_user_id" type="string" required>
+  Your user's unique identifier (e.g., email address).
+</ParamField>
+
+#### Returns
+
+```json
+{
+  "access_token": "ACCESS_TOKEN",
+  "refresh_token": "REFRESH_TOKEN"
+}
+```
+
+---
+
+## Integration Examples
+
+### OpenAI
+
+```python
+import openai
+from atp_sdk.clients import LLMClient
+
+openai_client = openai.OpenAI(api_key="YOUR_OPENAI_API_KEY")
+llm_client = LLMClient(api_key="YOUR_ATP_API_KEY")
+
+# Get toolkit context
+context = llm_client.get_toolkit_context(
+    toolkit_id="your_toolkit_id",
+    provider="openai",
+    user_prompt="Create a company and then list contacts."
+)
+
+# Use OpenAI to generate tool calls
+response = openai_client.chat.completions.create(
+    model="gpt-4o",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Create a company and then list contacts."}
+    ],
+    tools=context["tools"],
+    tool_choice="auto"
+)
+
+# Extract and execute tool calls
+tool_calls = response.choices[0].message.tool_calls
+
+for tool_call in tool_calls:
+    tool_call_json = {
+        "function": tool_call.function.name,
+        "parameters": tool_call.function.arguments
+    }
+
+    result = llm_client.call_tool(
+        toolkit_id="your_toolkit_id",
+        json_response=tool_call_json,
+        provider="openai",
+        user_prompt="Create a company and then list contacts."
+    )
+
+    print(f"Tool call result: {result}")
+```
+
+---
+
+### Anthropic
+
+```python
+import anthropic
+from atp_sdk.clients import LLMClient
+
+anthropic_client = anthropic.Anthropic(api_key="YOUR_ANTHROPIC_API_KEY")
+llm_client = LLMClient(api_key="YOUR_ATP_API_KEY")
+
+# Get toolkit context
+context = llm_client.get_toolkit_context(
+    toolkit_id="your_toolkit_id",
+    provider="anthropic",
+    user_prompt="Create a company and then list contacts."
+)
+
+# Use Anthropic to generate tool calls
+response = anthropic_client.messages.create(
+    model="claude-3-opus-20240229",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "Create a company and then list contacts."}
+    ],
+    tools=context["tools"]
+)
+
+# Extract and execute tool calls
+tool_calls = response.content
+
+for tool_call in tool_calls:
+    if tool_call.type == "tool_use":
+        tool_call_json = {
+            "function": tool_call.name,
+            "parameters": tool_call.input
+        }
+
+        result = llm_client.call_tool(
+            toolkit_id="your_toolkit_id",
+            json_response=tool_call_json,
+            provider="anthropic",
+            user_prompt="Create a company and then list contacts."
+        )
+
+        print(f"Tool call result: {result}")
+```
+
+---
+
+### Mistral AI
+
+```python
+from mistralai.client import MistralClient
+from atp_sdk.clients import LLMClient
+
+mistral_client = MistralClient(api_key="YOUR_MISTRAL_API_KEY")
+llm_client = LLMClient(api_key="YOUR_ATP_API_KEY")
+
+# Get toolkit context
+context = llm_client.get_toolkit_context(
+    toolkit_id="your_toolkit_id",
+    provider="mistralai",
+    user_prompt="Create a company and then list contacts."
+)
+
+# Use Mistral to generate tool calls
+response = mistral_client.chat(
+    model="mistral-large-latest",
+    messages=[{"role": "user", "content": "Create a company and then list contacts."}],
+    tools=context["tools"]
+)
+
+# Extract and execute tool calls
+tool_calls = response.choices[0].message.tool_calls
+
+for tool_call in tool_calls:
+    tool_call_json = {
+        "function": tool_call.function.name,
+        "parameters": tool_call.function.arguments
+    }
+
+    result = llm_client.call_tool(
+        toolkit_id="your_toolkit_id",
+        json_response=tool_call_json,
+        provider="mistralai",
+        user_prompt="Create a company and then list contacts."
+    )
+
+    print(f"Tool call result: {result}")
+```
+
+---
+
+## OAuth2 Flow Example
+
+```python
+from atp_sdk.clients import LLMClient
+
+llm_client = LLMClient(api_key="YOUR_ATP_API_KEY")
+
+# Step 1: Initiate OAuth connection
+connection = llm_client.initiate_oauth_connection(
+    platform_id="hubspot",
+    external_user_id="user@example.com",
+    developer_redirect_url="https://your-app.com/oauth/callback"
+)
+print("Authorize at:", connection["authorization_url"])
+
+# Step 2: Wait for connection
+account = llm_client.wait_for_connection(
+    platform_id="hubspot",
+    external_user_id="user@example.com"
+)
+print("Integration ID:", account["integration_id"])
+
+# Step 3: Fetch tokens
+tokens = llm_client.get_user_tokens(
+    platform_id="hubspot",
+    external_user_id="user@example.com"
+)
+print("Access token:", tokens["access_token"])
+```
+
+<Note>
+  The ATP SDK will automatically inject tokens into tool calls as needed. You only need to handle OAuth and fetch tokens once.
+</Note>
+
+---
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="ToolKitClient" icon="wrench" href="/sdk/toolkit-client">
+    Learn how to register and serve tools
+  </Card>
+  <Card title="OAuth2 Guide" icon="lock" href="/guides/oauth">
+    Set up OAuth2 authentication
+  </Card>
+  <Card title="Examples" icon="lightbulb" href="/examples/overview">
+    Explore more examples
+  </Card>
+  <Card title="Framework Integration" icon="code" href="/integrations/overview">
+    Use ATP with Django, FastAPI, or Flask
+  </Card>
+</CardGroup>

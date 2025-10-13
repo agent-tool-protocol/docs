@@ -1,107 +1,122 @@
 ---
 title: "Introduction"
-description: "Get started with the Agent Tool Protocol (ATP)"
+description: "A Python SDK for registering, exposing, and serving your own Python functions as tools via the ATP platform"
 sidebarTitle: "Introduction"
+---
+
+<p align="center">
+  <img src="https://github.com/sam-14uel/Agent-Tool-Protocol/raw/main/assets/atp.png" alt="ATP Logo" />
+</p>
+
+## What is Agent Tool Protocol (ATP)?
+
+**Agent Tool Protocol (ATP)** is a Python SDK that enables you to register, expose, and serve your own Python functions as tools via the ATP platform. It supports:
+
+- **Secure OAuth2 flows** for third-party integrations
+- **Dynamic tool registration** with metadata
+- **Real-time tool invocation** via WebSocket
+- **LLM integration** with OpenAI, Anthropic, and Mistral AI
+- **Framework support** for Django, FastAPI, and Flask
+
 ---
 
 ## How ATP Works
 
-ATP is the foundation of **ChatATP**, an AI system that allows any LLM to call your custom tools through a shared context protocol.
+ATP enables any LLM to call your custom Python functions through a shared context protocol.
 
 ```mermaid
 flowchart LR
-    UserPrompt["User Prompt"] --> ChatATP["ChatATP Agent"]
-    ChatATP --> ToolKit1["ToolKit A"]
-    ChatATP --> ToolKit2["ToolKit B"]
-    ToolKit1 -->|@register_tool| ToolA["Function A"]
-    ToolKit2 -->|@register_tool| ToolB["Function B"]
+    LLM["LLM (OpenAI/Anthropic/Mistral)"] --> ATP["ATP Server"]
+    ATP --> ToolKit["Your ToolKit"]
+    ToolKit -->|@register_tool| Tool1["Function 1"]
+    ToolKit -->|@register_tool| Tool2["Function 2"]
+    ToolKit -->|@register_tool| Tool3["Function 3"]
 ```
 
-- **ChatATP Agent**: The orchestrator that selects and routes tools to call
-- **ToolKits**: Your custom packages of capabilities, created with the `atp` SDK
-- **Tools**: Functions exposed with the `@register_tool` decorator
+- **LLM**: OpenAI, Anthropic, or Mistral AI models that generate tool calls
+- **ATP Server**: The orchestrator that routes tool requests
+- **ToolKit**: Your custom package of capabilities using the ATP SDK
+- **Tools**: Python functions exposed with the `@register_tool` decorator
 
 ---
 
-## Get Started
+## Installation
 
-Choose your path to begin:
+```bash
+pip install AgentToolProtocol
+```
+
+---
+
+## Quick Start
 
 <CardGroup cols={2}>
-  <Card title="Build a ToolKit" icon="rocket" href="/quickstart/toolkit">
-    Start with the ATP SDK and build tools callable by AI
+  <Card title="Build Tools with ToolKitClient" icon="wrench" href="/quickstart">
+    Register Python functions as tools and serve them via WebSocket
   </Card>
-  <Card title="Use ChatATP" icon="message" href="/quickstart/user">
-    Start interacting with ToolKits through ChatATP
+  <Card title="Connect LLMs with LLMClient" icon="robot" href="/sdk/llm-client">
+    Integrate OpenAI, Anthropic, or Mistral AI with your toolkits
   </Card>
 </CardGroup>
 
 ---
 
-## Tutorials & Examples
+## Key Features
 
 <CardGroup cols={2}>
-  <Card title="Example ToolKits" icon="grid" href="/examples">
-    See what kinds of ToolKits are already built
+  <Card title="ToolKitClient" icon="box" href="/sdk/toolkit-client">
+    Register and serve Python functions as tools
   </Card>
-  <Card title="ToolKit Workshop (2hr Video)" icon="person-chalkboard" href="https://www.youtube.com/watch?v=kQmXtrmQ5Zg">
-    A full walkthrough for building, testing, and deploying ATP ToolKits
+  <Card title="LLMClient" icon="brain" href="/sdk/llm-client">
+    Connect LLMs to your toolkits and execute tool calls
   </Card>
-  <Card title="Using APIs with ATP" icon="network-wired" href="/tutorials/api-tools">
-    Wrap third-party APIs into tools for LLMs to call
+  <Card title="OAuth2 Integration" icon="lock" href="/guides/oauth">
+    Secure authentication with HubSpot, Google, Salesforce, and more
   </Card>
-  <Card title="Building Local Tools" icon="wrench" href="/tutorials/local-tools">
-    Access local files, DBs, and scripts through ATP
+  <Card title="Framework Integration" icon="code" href="/integrations/overview">
+    Use ATP with Django, FastAPI, or Flask
   </Card>
 </CardGroup>
 
 ---
 
-## Core Concepts
+## Use Cases
 
 <CardGroup cols={2}>
-  <Card title="What is a ToolKit?" icon="box" href="/docs/concepts/toolkit">
-    Learn the structure and lifecycle of a ToolKit
+  <Card title="API Integration Tools" icon="network-wired" href="/examples/api-tools">
+    Wrap third-party APIs (HubSpot, Salesforce, etc.) as LLM tools
   </Card>
-  <Card title="Tools and Decorators" icon="code" href="/docs/concepts/tools">
-    Register and describe functions with metadata
+  <Card title="Local Tools" icon="folder" href="/examples/local-tools">
+    Access local files, databases, and scripts through ATP
   </Card>
-  <Card title="ToolKit Store" icon="store" href="/docs/concepts/store">
-    Discover and share ToolKits publicly or privately
+  <Card title="Multi-Step Workflows" icon="diagram-project" href="/examples/workflows">
+    Chain multiple tool calls for complex tasks
   </Card>
-  <Card title="Deployments" icon="cloud" href="/docs/concepts/deployments">
-    Run ToolKits in the cloud or on your local machine
-  </Card>
-  <Card title="LLM Integration" icon="robot" href="/docs/concepts/integration">
-    Let ToolKits be called by any model via ChatATP
-  </Card>
-  <Card title="ToolKit Collection" icon="layer-group" href="/docs/concepts/collection">
-    How users organize and reuse ToolKits across sessions
+  <Card title="Custom Integrations" icon="puzzle-piece" href="/examples/custom">
+    Build custom tools for your specific use case
   </Card>
 </CardGroup>
 
 ---
 
-## Contribute
+## Supported LLM Providers
 
-ATP is open to contributors:
+ATP works seamlessly with:
 
-- 📦 [SDK source](https://github.com/agenttoolprotocol/atp-sdk)
-- 🛠️ [Contribute a ToolKit](/development/contributing)
-- 🔧 [File issues](https://github.com/agenttoolprotocol)
+- **OpenAI** (GPT-4, GPT-3.5, etc.)
+- **Anthropic** (Claude 3 Opus, Sonnet, Haiku)
+- **Mistral AI** (Mistral Large, Medium, Small)
 
 ---
 
 ## Feedback & Support
 
-- 🐛 [Bug Reports & Requests](https://github.com/agenttoolprotocol)
-- 💬 [Community Discussions](https://github.com/orgs/agenttoolprotocol/discussions)
-- 🧠 [ChatATP Support](https://chatatp.ai/support)
+- [Bug Reports & Feature Requests](https://github.com/sam-14uel/Agent-Tool-Protocol/issues)
+- [GitHub Discussions](https://github.com/sam-14uel/Agent-Tool-Protocol/discussions)
+- [Email Support](mailto:support@chat-atp.com)
 
 ---
 
-## See Also
+## License
 
-<Card title="Compare with MCP" icon="circle-nodes" href="/docs/atp-vs-mcp">
-  See how ATP differs from the Model Context Protocol (MCP)
-</Card>
+MIT License. See [LICENSE](https://github.com/sam-14uel/Agent-Tool-Protocol/blob/main/LICENSE) for details.

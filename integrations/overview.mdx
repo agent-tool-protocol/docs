@@ -1,0 +1,110 @@
+---
+title: "Framework Integration"
+description: "Use ATP with Django, FastAPI, or Flask"
+---
+
+## Overview
+
+ATP can be integrated with popular Python web frameworks to expose your tools as HTTP endpoints. This allows you to:
+
+- **Serve tools via HTTP** instead of WebSocket
+- **Integrate with existing web applications**
+- **Use framework-specific features** (middleware, authentication, etc.)
+
+---
+
+## Supported Frameworks
+
+<CardGroup cols={3}>
+  <Card title="Django" icon="python" href="/integrations/django">
+    Full-featured web framework with ORM and admin interface
+  </Card>
+  <Card title="FastAPI" icon="bolt" href="/integrations/fastapi">
+    Modern, fast framework with automatic API documentation
+  </Card>
+  <Card title="Flask" icon="flask" href="/integrations/flask">
+    Lightweight and flexible micro-framework
+  </Card>
+</CardGroup>
+
+---
+
+## How It Works
+
+When you integrate ATP with a web framework:
+
+1. **Register tools** using the `ToolKitClient` as usual
+2. **Register the client** with the framework-specific registry
+3. **Expose endpoints** for toolkit and tool access
+4. **No need to call `start()`** - the framework handles requests
+
+### Endpoint Structure
+
+- **GET `/atp/<toolkit_name>/`** - Get toolkit details and list of tools
+- **GET `/atp/<toolkit_name>/<tool_name>/`** - Get tool context/schema
+- **POST `/atp/<toolkit_name>/<tool_name>/`** - Execute a tool with parameters
+
+---
+
+## Quick Comparison
+
+| Feature | Django | FastAPI | Flask |
+|---------|--------|---------|-------|
+| **Setup Complexity** | Medium | Low | Low |
+| **Performance** | Good | Excellent | Good |
+| **Auto Documentation** | No | Yes | No |
+| **Async Support** | Yes | Yes | No (by default) |
+| **Best For** | Full applications | APIs & microservices | Simple apps |
+
+---
+
+## Common Pattern
+
+All framework integrations follow a similar pattern:
+
+```python
+from atp_sdk.clients import ToolKitClient
+from <framework>_atp.registry import register_client
+
+# Initialize the client
+client = ToolKitClient(
+    api_key="YOUR_ATP_API_KEY",
+    app_name="my_toolkit"
+)
+
+# Register the client with the framework
+register_client("my_toolkit", client)
+
+# Register tools as usual
+@client.register_tool(
+    function_name="hello_world",
+    params=['name'],
+    required_params=['name'],
+    description="Returns a greeting.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def hello_world(**kwargs):
+    return {"message": f"Hello, {kwargs.get('name')}!"}
+
+# No need to call client.start()
+```
+
+---
+
+## Next Steps
+
+Choose your framework to get started:
+
+<CardGroup cols={3}>
+  <Card title="Django Setup" icon="python" href="/integrations/django">
+    Set up ATP with Django
+  </Card>
+  <Card title="FastAPI Setup" icon="bolt" href="/integrations/fastapi">
+    Set up ATP with FastAPI
+  </Card>
+  <Card title="Flask Setup" icon="flask" href="/integrations/flask">
+    Set up ATP with Flask
+  </Card>
+</CardGroup>

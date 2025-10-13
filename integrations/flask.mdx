@@ -1,0 +1,468 @@
+---
+title: "Flask Integration"
+description: "Use ATP with Flask"
+---
+
+## Overview
+
+Integrate ATP with Flask to expose your tools as HTTP endpoints in a lightweight, flexible way.
+
+---
+
+## Installation
+
+```bash
+pip install AgentToolProtocol flask
+```
+
+---
+
+## Setup
+
+### Step 1: Create ATP Tools Module
+
+Create a module to register your toolkits and tools (e.g., `atp_tools.py`):
+
+```python
+# atp_tools.py
+from atp_sdk.clients import ToolKitClient
+from flask_atp.registry import register_client
+
+# Initialize the client
+client = ToolKitClient(
+    api_key="YOUR_ATP_API_KEY",
+    app_name="my_toolkit"
+)
+
+# Register the client
+register_client("my_toolkit", client)
+
+# Register tools
+@client.register_tool(
+    function_name="hello_world",
+    params=['name'],
+    required_params=['name'],
+    description="Returns a greeting.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def hello_world(**kwargs):
+    return {"message": f"Hello, {kwargs.get('name')}!"}
+```
+
+---
+
+### Step 2: Create Flask App
+
+Create your Flask app and import the ATP tools module:
+
+```python
+# app.py
+from flask import Flask, request, jsonify
+from flask_atp.registry import get_client
+import atp_tools  # Ensure toolkit registration
+
+app = Flask(__name__)
+
+@app.route("/atp/<toolkit_name>/<tool_name>/", methods=["GET", "POST"])
+def tool_endpoint(toolkit_name, tool_name):
+    """Get tool context or execute tool"""
+    client = get_client(toolkit_name)
+    if not client:
+        return jsonify({"error": "Toolkit not found"}), 404
+    
+    tool = client.registered_tools.get(tool_name)
+    if not tool:
+        return jsonify({"error": "Tool not found"}), 404
+    
+    if request.method == "GET":
+        # Return tool context
+        return jsonify(tool)
+    
+    # Execute tool
+    params = request.json if request.is_json else request.form.to_dict()
+    try:
+        result = tool["function"](**params)
+        return jsonify({"result": result})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/atp/<toolkit_name>/", methods=["GET"])
+def toolkit_endpoint(toolkit_name):
+    """Get toolkit details and list of tools"""
+    client = get_client(toolkit_name)
+    if not client:
+        return jsonify({"error": "Toolkit not found"}), 404
+    
+    tools = list(client.registered_tools.keys())
+    return jsonify({"toolkit": toolkit_name, "tools": tools})
+
+if __name__ == "__main__":
+    app.run(debug=True)
+```
+
+---
+
+### Step 3: Run the App
+
+Run your Flask app:
+
+```bash
+python app.py
+```
+
+Your API will be available at `http://localhost:5000`.
+
+---
+
+## Usage
+
+### Endpoints
+
+- **GET `/atp/<toolkit_name>/`** - Get toolkit details and list of tools
+- **GET `/atp/<toolkit_name>/<tool_name>/`** - Get tool context/schema
+- **POST `/atp/<toolkit_name>/<tool_name>/`** - Execute a tool with parameters
+
+### Example Requests
+
+#### Get Toolkit Details
+
+```bash
+curl http://localhost:5000/atp/my_toolkit/
+```
+
+**Response:**
+
+```json
+{
+  "toolkit": "my_toolkit",
+  "tools": ["hello_world"]
+}
+```
+
+#### Get Tool Context
+
+```bash
+curl http://localhost:5000/atp/my_toolkit/hello_world/
+```
+
+**Response:**
+
+```json
+{
+  "function_name": "hello_world",
+  "params": ["name"],
+  "required_params": ["name"],
+  "description": "Returns a greeting.",
+  "auth_provider": null,
+  "auth_type": null,
+  "auth_with": null
+}
+```
+
+#### Execute Tool
+
+```bash
+curl -X POST http://localhost:5000/atp/my_toolkit/hello_world/ \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alice"}'
+```
+
+**Response:**
+
+```json
+{
+  "result": {
+    "message": "Hello, Alice!"
+  }
+}
+```
+
+---
+
+## Complete Example
+
+Here's a complete example with multiple tools:
+
+```python
+# atp_tools.py
+from atp_sdk.clients import ToolKitClient
+from flask_atp.registry import register_client
+import requests
+
+# Initialize the client
+client = ToolKitClient(
+    api_key="YOUR_ATP_API_KEY",
+    app_name="flask_toolkit"
+)
+
+# Register the client
+register_client("flask_toolkit", client)
+
+# Tool 1: Hello World
+@client.register_tool(
+    function_name="hello_world",
+    params=['name'],
+    required_params=['name'],
+    description="Returns a greeting.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def hello_world(**kwargs):
+    return {"message": f"Hello, {kwargs.get('name')}!"}
+
+# Tool 2: Calculate
+@client.register_tool(
+    function_name="calculate",
+    params=['operation', 'a', 'b'],
+    required_params=['operation', 'a', 'b'],
+    description="Performs a calculation (add, subtract, multiply, divide).",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def calculate(**kwargs):
+    operation = kwargs.get('operation')
+    a = float(kwargs.get('a'))
+    b = float(kwargs.get('b'))
+    
+    if operation == 'add':
+        result = a + b
+    elif operation == 'subtract':
+        result = a - b
+    elif operation == 'multiply':
+        result = a * b
+    elif operation == 'divide':
+        result = a / b if b != 0 else "Error: Division by zero"
+    else:
+        result = "Error: Invalid operation"
+    
+    return {"result": result}
+
+# Tool 3: Fetch Data
+@client.register_tool(
+    function_name="fetch_data",
+    params=['url'],
+    required_params=['url'],
+    description="Fetches data from a URL.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def fetch_data(**kwargs):
+    url = kwargs.get('url')
+    response = requests.get(url)
+    return {"status_code": response.status_code, "data": response.json()}
+```
+
+```python
+# app.py
+from flask import Flask, request, jsonify
+from flask_atp.registry import get_client
+import atp_tools  # Ensure toolkit registration
+
+app = Flask(__name__)
+
+@app.route("/")
+def root():
+    """Root endpoint"""
+    return jsonify({
+        "message": "ATP Flask Integration",
+        "endpoints": {
+            "toolkit": "/atp/<toolkit_name>/",
+            "tool_get": "/atp/<toolkit_name>/<tool_name>/ [GET]",
+            "tool_post": "/atp/<toolkit_name>/<tool_name>/ [POST]"
+        }
+    })
+
+@app.route("/atp/<toolkit_name>/<tool_name>/", methods=["GET", "POST"])
+def tool_endpoint(toolkit_name, tool_name):
+    """Get tool context or execute tool"""
+    client = get_client(toolkit_name)
+    if not client:
+        return jsonify({"error": "Toolkit not found"}), 404
+    
+    tool = client.registered_tools.get(tool_name)
+    if not tool:
+        return jsonify({"error": "Tool not found"}), 404
+    
+    if request.method == "GET":
+        # Return tool context
+        return jsonify(tool)
+    
+    # Execute tool
+    params = request.json if request.is_json else request.form.to_dict()
+    try:
+        result = tool["function"](**params)
+        return jsonify({"result": result})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/atp/<toolkit_name>/", methods=["GET"])
+def toolkit_endpoint(toolkit_name):
+    """Get toolkit details and list of tools"""
+    client = get_client(toolkit_name)
+    if not client:
+        return jsonify({"error": "Toolkit not found"}), 404
+    
+    tools = list(client.registered_tools.keys())
+    return jsonify({"toolkit": toolkit_name, "tools": tools})
+
+if __name__ == "__main__":
+    app.run(debug=True)
+```
+
+---
+
+## Advanced Usage
+
+### Using Flask Blueprints
+
+Organize your ATP endpoints using Flask Blueprints:
+
+```python
+from flask import Blueprint, request, jsonify
+from flask_atp.registry import get_client
+
+atp_bp = Blueprint('atp', __name__, url_prefix='/atp')
+
+@atp_bp.route("/<toolkit_name>/<tool_name>/", methods=["GET", "POST"])
+def tool_endpoint(toolkit_name, tool_name):
+    # Implementation here
+    pass
+
+@atp_bp.route("/<toolkit_name>/", methods=["GET"])
+def toolkit_endpoint(toolkit_name):
+    # Implementation here
+    pass
+
+# Register blueprint in app.py
+app.register_blueprint(atp_bp)
+```
+
+### Error Handling
+
+Add custom error handlers:
+
+```python
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Not found"}), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({"error": "Internal server error"}), 500
+```
+
+### CORS Support
+
+Enable CORS for cross-origin requests:
+
+```bash
+pip install flask-cors
+```
+
+```python
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+```
+
+### Authentication
+
+Add authentication middleware:
+
+```python
+from functools import wraps
+from flask import request
+
+def require_api_key(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        api_key = request.headers.get('X-API-Key')
+        if not api_key or api_key != "YOUR_API_KEY":
+            return jsonify({"error": "Unauthorized"}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route("/atp/<toolkit_name>/<tool_name>/", methods=["POST"])
+@require_api_key
+def tool_endpoint(toolkit_name, tool_name):
+    # Protected endpoint
+    pass
+```
+
+### Using Flask-SQLAlchemy
+
+Integrate with databases using Flask-SQLAlchemy:
+
+```python
+from flask_sqlalchemy import SQLAlchemy
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+db = SQLAlchemy(app)
+
+@client.register_tool(
+    function_name="get_users",
+    params=[],
+    required_params=[],
+    description="Returns a list of users from the database.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def get_users(**kwargs):
+    from models import User
+    users = User.query.all()
+    return {"users": [{"id": u.id, "name": u.name} for u in users]}
+```
+
+---
+
+## Production Deployment
+
+### Using Gunicorn
+
+For production, use Gunicorn instead of Flask's development server:
+
+```bash
+pip install gunicorn
+```
+
+```bash
+gunicorn -w 4 -b 0.0.0.0:5000 app:app
+```
+
+### Using uWSGI
+
+Alternatively, use uWSGI:
+
+```bash
+pip install uwsgi
+```
+
+```bash
+uwsgi --http :5000 --wsgi-file app.py --callable app --processes 4 --threads 2
+```
+
+---
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="ToolKitClient" icon="wrench" href="/sdk/toolkit-client">
+    Learn more about ToolKitClient
+  </Card>
+  <Card title="OAuth2 Guide" icon="lock" href="/guides/oauth">
+    Set up OAuth2 authentication
+  </Card>
+  <Card title="Django Integration" icon="python" href="/integrations/django">
+    Try ATP with Django
+  </Card>
+  <Card title="Examples" icon="lightbulb" href="/examples/overview">
+    Explore more examples
+  </Card>
+</CardGroup>

@@ -1,0 +1,330 @@
+---
+title: "Django Integration"
+description: "Use ATP with Django"
+---
+
+## Overview
+
+Integrate ATP with Django to expose your tools as HTTP endpoints within your Django application.
+
+---
+
+## Installation
+
+```bash
+pip install AgentToolProtocol django
+```
+
+---
+
+## Setup
+
+### Step 1: Add to INSTALLED_APPS
+
+Add `"django_atp"` to your `INSTALLED_APPS` in `settings.py`:
+
+```python
+# settings.py
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django_atp',  # Add this
+    'myapp',
+]
+```
+
+---
+
+### Step 2: Include URLs
+
+Include the ATP URLs in your project's `urls.py`:
+
+```python
+# urls.py
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('django_atp.urls')),  # Add this
+]
+```
+
+---
+
+### Step 3: Create ATP Tools Module
+
+Create a module to register your toolkits and tools (e.g., `myapp/atp_tools.py`):
+
+```python
+# myapp/atp_tools.py
+from atp_sdk.clients import ToolKitClient
+from django_atp.registry import register_client
+
+# Initialize the client
+client = ToolKitClient(
+    api_key="YOUR_ATP_API_KEY",
+    app_name="my_toolkit"
+)
+
+# Register the client
+register_client("my_toolkit", client)
+
+# Register tools
+@client.register_tool(
+    function_name="hello_world",
+    params=['name'],
+    required_params=['name'],
+    description="Returns a greeting.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def hello_world(**kwargs):
+    return {"message": f"Hello, {kwargs.get('name')}!"}
+
+@client.register_tool(
+    function_name="get_users",
+    params=[],
+    required_params=[],
+    description="Returns a list of users from the database.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def get_users(**kwargs):
+    from django.contrib.auth.models import User
+    users = User.objects.all().values('id', 'username', 'email')
+    return {"users": list(users)}
+```
+
+---
+
+### Step 4: Import in AppConfig
+
+Import the ATP tools module in your app's `apps.py` to ensure registration at startup:
+
+```python
+# myapp/apps.py
+from django.apps import AppConfig
+
+class MyAppConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'myapp'
+    
+    def ready(self):
+        import myapp.atp_tools  # Import to register tools
+```
+
+---
+
+### Step 5: Update __init__.py
+
+Make sure your app uses the custom AppConfig:
+
+```python
+# myapp/__init__.py
+default_app_config = 'myapp.apps.MyAppConfig'
+```
+
+---
+
+## Usage
+
+### Endpoints
+
+Once set up, your tools are exposed at:
+
+- **GET `/atp/<toolkit_name>/`** - Get toolkit details and list of tools
+- **GET `/atp/<toolkit_name>/<tool_name>/`** - Get tool context/schema
+- **POST `/atp/<toolkit_name>/<tool_name>/`** - Execute a tool with parameters
+
+### Example Requests
+
+#### Get Toolkit Details
+
+```bash
+curl http://localhost:8000/atp/my_toolkit/
+```
+
+**Response:**
+
+```json
+{
+  "toolkit": "my_toolkit",
+  "tools": ["hello_world", "get_users"]
+}
+```
+
+#### Get Tool Context
+
+```bash
+curl http://localhost:8000/atp/my_toolkit/hello_world/
+```
+
+**Response:**
+
+```json
+{
+  "function_name": "hello_world",
+  "params": ["name"],
+  "required_params": ["name"],
+  "description": "Returns a greeting.",
+  "auth_provider": null,
+  "auth_type": null,
+  "auth_with": null
+}
+```
+
+#### Execute Tool
+
+```bash
+curl -X POST http://localhost:8000/atp/my_toolkit/hello_world/ \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alice"}'
+```
+
+**Response:**
+
+```json
+{
+  "result": {
+    "message": "Hello, Alice!"
+  }
+}
+```
+
+---
+
+## Complete Example
+
+Here's a complete example of a Django app with ATP integration:
+
+```python
+# myapp/atp_tools.py
+from atp_sdk.clients import ToolKitClient
+from django_atp.registry import register_client
+from django.contrib.auth.models import User
+import requests
+
+# Initialize the client
+client = ToolKitClient(
+    api_key="YOUR_ATP_API_KEY",
+    app_name="django_toolkit"
+)
+
+# Register the client
+register_client("django_toolkit", client)
+
+# Tool 1: Hello World
+@client.register_tool(
+    function_name="hello_world",
+    params=['name'],
+    required_params=['name'],
+    description="Returns a greeting.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def hello_world(**kwargs):
+    return {"message": f"Hello, {kwargs.get('name')}!"}
+
+# Tool 2: Get Users
+@client.register_tool(
+    function_name="get_users",
+    params=[],
+    required_params=[],
+    description="Returns a list of users from the database.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def get_users(**kwargs):
+    users = User.objects.all().values('id', 'username', 'email')
+    return {"users": list(users)}
+
+# Tool 3: Create User
+@client.register_tool(
+    function_name="create_user",
+    params=['username', 'email', 'password'],
+    required_params=['username', 'email', 'password'],
+    description="Creates a new user in the database.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def create_user(**kwargs):
+    user = User.objects.create_user(
+        username=kwargs.get('username'),
+        email=kwargs.get('email'),
+        password=kwargs.get('password')
+    )
+    return {"user": {"id": user.id, "username": user.username, "email": user.email}}
+```
+
+---
+
+## Advanced Usage
+
+### Using Django Models
+
+You can access Django models directly in your tools:
+
+```python
+@client.register_tool(
+    function_name="get_posts",
+    params=[],
+    required_params=[],
+    description="Returns a list of blog posts.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def get_posts(**kwargs):
+    from myapp.models import Post
+    posts = Post.objects.all().values('id', 'title', 'content', 'created_at')
+    return {"posts": list(posts)}
+```
+
+### Using Django Authentication
+
+You can use Django's authentication system in your tools:
+
+```python
+@client.register_tool(
+    function_name="get_current_user",
+    params=['user_id'],
+    required_params=['user_id'],
+    description="Returns the current user's details.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def get_current_user(**kwargs):
+    from django.contrib.auth.models import User
+    user = User.objects.get(id=kwargs.get('user_id'))
+    return {"user": {"id": user.id, "username": user.username, "email": user.email}}
+```
+
+---
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="ToolKitClient" icon="wrench" href="/sdk/toolkit-client">
+    Learn more about ToolKitClient
+  </Card>
+  <Card title="OAuth2 Guide" icon="lock" href="/guides/oauth">
+    Set up OAuth2 authentication
+  </Card>
+  <Card title="FastAPI Integration" icon="bolt" href="/integrations/fastapi">
+    Try ATP with FastAPI
+  </Card>
+  <Card title="Examples" icon="lightbulb" href="/examples/overview">
+    Explore more examples
+  </Card>
+</CardGroup>

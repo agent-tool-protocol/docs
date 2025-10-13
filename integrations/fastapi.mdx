@@ -1,0 +1,414 @@
+---
+title: "FastAPI Integration"
+description: "Use ATP with FastAPI"
+---
+
+## Overview
+
+Integrate ATP with FastAPI to expose your tools as HTTP endpoints with automatic API documentation.
+
+---
+
+## Installation
+
+```bash
+pip install AgentToolProtocol fastapi uvicorn
+```
+
+---
+
+## Setup
+
+### Step 1: Create ATP Tools Module
+
+Create a module to register your toolkits and tools (e.g., `atp_tools.py`):
+
+```python
+# atp_tools.py
+from atp_sdk.clients import ToolKitClient
+from fastapi_atp.registry import register_client
+
+# Initialize the client
+client = ToolKitClient(
+    api_key="YOUR_ATP_API_KEY",
+    app_name="my_toolkit"
+)
+
+# Register the client
+register_client("my_toolkit", client)
+
+# Register tools
+@client.register_tool(
+    function_name="hello_world",
+    params=['name'],
+    required_params=['name'],
+    description="Returns a greeting.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def hello_world(**kwargs):
+    return {"message": f"Hello, {kwargs.get('name')}!"}
+```
+
+---
+
+### Step 2: Create FastAPI App
+
+Create your FastAPI app and import the ATP tools module:
+
+```python
+# main.py
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+from fastapi_atp.registry import get_client
+import atp_tools  # Ensure toolkit registration
+
+app = FastAPI(title="ATP FastAPI Integration")
+
+@app.get("/atp/{toolkit_name}/{tool_name}/")
+async def get_tool(toolkit_name: str, tool_name: str):
+    """Get tool context/schema"""
+    client = get_client(toolkit_name)
+    if not client:
+        return JSONResponse({"error": "Toolkit not found"}, status_code=404)
+    
+    tool = client.registered_tools.get(tool_name)
+    if not tool:
+        return JSONResponse({"error": "Tool not found"}, status_code=404)
+    
+    return JSONResponse(tool)
+
+@app.post("/atp/{toolkit_name}/{tool_name}/")
+async def post_tool(toolkit_name: str, tool_name: str, request: Request):
+    """Execute a tool with parameters"""
+    client = get_client(toolkit_name)
+    if not client:
+        return JSONResponse({"error": "Toolkit not found"}, status_code=404)
+    
+    tool = client.registered_tools.get(tool_name)
+    if not tool:
+        return JSONResponse({"error": "Tool not found"}, status_code=404)
+    
+    params = await request.json()
+    result = tool["function"](**params)
+    return JSONResponse({"result": result})
+
+@app.get("/atp/{toolkit_name}/")
+async def get_toolkit(toolkit_name: str):
+    """Get toolkit details and list of tools"""
+    client = get_client(toolkit_name)
+    if not client:
+        return JSONResponse({"error": "Toolkit not found"}, status_code=404)
+    
+    tools = list(client.registered_tools.keys())
+    return JSONResponse({"toolkit": toolkit_name, "tools": tools})
+```
+
+---
+
+### Step 3: Run the App
+
+Run your FastAPI app with Uvicorn:
+
+```bash
+uvicorn main:app --reload
+```
+
+Your API will be available at `http://localhost:8000`.
+
+---
+
+## Usage
+
+### Endpoints
+
+- **GET `/atp/<toolkit_name>/`** - Get toolkit details and list of tools
+- **GET `/atp/<toolkit_name>/<tool_name>/`** - Get tool context/schema
+- **POST `/atp/<toolkit_name>/<tool_name>/`** - Execute a tool with parameters
+
+### Example Requests
+
+#### Get Toolkit Details
+
+```bash
+curl http://localhost:8000/atp/my_toolkit/
+```
+
+**Response:**
+
+```json
+{
+  "toolkit": "my_toolkit",
+  "tools": ["hello_world"]
+}
+```
+
+#### Get Tool Context
+
+```bash
+curl http://localhost:8000/atp/my_toolkit/hello_world/
+```
+
+**Response:**
+
+```json
+{
+  "function_name": "hello_world",
+  "params": ["name"],
+  "required_params": ["name"],
+  "description": "Returns a greeting.",
+  "auth_provider": null,
+  "auth_type": null,
+  "auth_with": null
+}
+```
+
+#### Execute Tool
+
+```bash
+curl -X POST http://localhost:8000/atp/my_toolkit/hello_world/ \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alice"}'
+```
+
+**Response:**
+
+```json
+{
+  "result": {
+    "message": "Hello, Alice!"
+  }
+}
+```
+
+---
+
+## Complete Example
+
+Here's a complete example with multiple tools:
+
+```python
+# atp_tools.py
+from atp_sdk.clients import ToolKitClient
+from fastapi_atp.registry import register_client
+import requests
+
+# Initialize the client
+client = ToolKitClient(
+    api_key="YOUR_ATP_API_KEY",
+    app_name="fastapi_toolkit"
+)
+
+# Register the client
+register_client("fastapi_toolkit", client)
+
+# Tool 1: Hello World
+@client.register_tool(
+    function_name="hello_world",
+    params=['name'],
+    required_params=['name'],
+    description="Returns a greeting.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def hello_world(**kwargs):
+    return {"message": f"Hello, {kwargs.get('name')}!"}
+
+# Tool 2: Calculate
+@client.register_tool(
+    function_name="calculate",
+    params=['operation', 'a', 'b'],
+    required_params=['operation', 'a', 'b'],
+    description="Performs a calculation (add, subtract, multiply, divide).",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def calculate(**kwargs):
+    operation = kwargs.get('operation')
+    a = float(kwargs.get('a'))
+    b = float(kwargs.get('b'))
+    
+    if operation == 'add':
+        result = a + b
+    elif operation == 'subtract':
+        result = a - b
+    elif operation == 'multiply':
+        result = a * b
+    elif operation == 'divide':
+        result = a / b if b != 0 else "Error: Division by zero"
+    else:
+        result = "Error: Invalid operation"
+    
+    return {"result": result}
+
+# Tool 3: Fetch Data
+@client.register_tool(
+    function_name="fetch_data",
+    params=['url'],
+    required_params=['url'],
+    description="Fetches data from a URL.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+def fetch_data(**kwargs):
+    url = kwargs.get('url')
+    response = requests.get(url)
+    return {"status_code": response.status_code, "data": response.json()}
+```
+
+```python
+# main.py
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+from fastapi_atp.registry import get_client
+import atp_tools  # Ensure toolkit registration
+
+app = FastAPI(
+    title="ATP FastAPI Integration",
+    description="Expose ATP tools as HTTP endpoints",
+    version="1.0.0"
+)
+
+@app.get("/")
+async def root():
+    """Root endpoint"""
+    return {"message": "ATP FastAPI Integration", "docs": "/docs"}
+
+@app.get("/atp/{toolkit_name}/{tool_name}/")
+async def get_tool(toolkit_name: str, tool_name: str):
+    """Get tool context/schema"""
+    client = get_client(toolkit_name)
+    if not client:
+        return JSONResponse({"error": "Toolkit not found"}, status_code=404)
+    
+    tool = client.registered_tools.get(tool_name)
+    if not tool:
+        return JSONResponse({"error": "Tool not found"}, status_code=404)
+    
+    return JSONResponse(tool)
+
+@app.post("/atp/{toolkit_name}/{tool_name}/")
+async def post_tool(toolkit_name: str, tool_name: str, request: Request):
+    """Execute a tool with parameters"""
+    client = get_client(toolkit_name)
+    if not client:
+        return JSONResponse({"error": "Toolkit not found"}, status_code=404)
+    
+    tool = client.registered_tools.get(tool_name)
+    if not tool:
+        return JSONResponse({"error": "Tool not found"}, status_code=404)
+    
+    params = await request.json()
+    try:
+        result = tool["function"](**params)
+        return JSONResponse({"result": result})
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)
+
+@app.get("/atp/{toolkit_name}/")
+async def get_toolkit(toolkit_name: str):
+    """Get toolkit details and list of tools"""
+    client = get_client(toolkit_name)
+    if not client:
+        return JSONResponse({"error": "Toolkit not found"}, status_code=404)
+    
+    tools = list(client.registered_tools.keys())
+    return JSONResponse({"toolkit": toolkit_name, "tools": tools})
+```
+
+---
+
+## Automatic API Documentation
+
+FastAPI automatically generates interactive API documentation. Visit:
+
+- **Swagger UI**: `http://localhost:8000/docs`
+- **ReDoc**: `http://localhost:8000/redoc`
+
+---
+
+## Advanced Usage
+
+### Async Tools
+
+FastAPI supports async functions. You can define async tools:
+
+```python
+import httpx
+
+@client.register_tool(
+    function_name="async_fetch",
+    params=['url'],
+    required_params=['url'],
+    description="Asynchronously fetches data from a URL.",
+    auth_provider=None,
+    auth_type=None,
+    auth_with=None
+)
+async def async_fetch(**kwargs):
+    url = kwargs.get('url')
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url)
+        return {"status_code": response.status_code, "data": response.json()}
+```
+
+### Middleware
+
+You can add FastAPI middleware for authentication, logging, etc.:
+
+```python
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
+
+### Dependency Injection
+
+Use FastAPI's dependency injection for shared resources:
+
+```python
+from fastapi import Depends
+
+def get_db():
+    # Return database connection
+    pass
+
+@app.post("/atp/{toolkit_name}/{tool_name}/")
+async def post_tool(
+    toolkit_name: str,
+    tool_name: str,
+    request: Request,
+    db = Depends(get_db)
+):
+    # Use db in your endpoint
+    ...
+```
+
+---
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="ToolKitClient" icon="wrench" href="/sdk/toolkit-client">
+    Learn more about ToolKitClient
+  </Card>
+  <Card title="OAuth2 Guide" icon="lock" href="/guides/oauth">
+    Set up OAuth2 authentication
+  </Card>
+  <Card title="Django Integration" icon="python" href="/integrations/django">
+    Try ATP with Django
+  </Card>
+  <Card title="Examples" icon="lightbulb" href="/examples/overview">
+    Explore more examples
+  </Card>
+</CardGroup>
