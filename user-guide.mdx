@@ -1,0 +1,408 @@
+---
+title: "ChatATP User Guide"
+description: "Complete guide for using ChatATP to leverage ToolKits and Integrations"
+---
+
+## Welcome to ChatATP
+
+ChatATP is an AI-powered platform that allows you to leverage custom ToolKits and integrations to automate tasks, extract data, and build intelligent assistants. This guide will walk you through everything you need to know to get started as an end user.
+
+Whether you're a business professional, developer, or AI enthusiast, ChatATP empowers you to create custom AI agents that can interact with your favorite tools and services.
+
+---
+
+## Account Setup & Dashboard Overview
+
+### Creating Your ChatATP Account
+
+Getting started with ChatATP is simple and secure. Here's how to set up your account:
+
+1. **Visit the Signup Page**: Navigate to [chatatp.ai/signup](https://chatatp.ai/signup) or click "Sign Up" on the homepage.
+
+2. **Choose Your Signup Method**:
+   - **Email & Password**: Create a new account with your email address
+   - **Google OAuth**: Sign up instantly with your Google account
+   - **GitHub OAuth**: Connect with your GitHub account (great for developers)
+
+3. **Verify Your Account**: Check your email for a verification link and click it to activate your account.
+
+4. **Complete Your Profile**: Add your name, company (optional), and preferred settings.
+
+<Note>
+  ChatATP uses secure authentication and your data is protected with industry-standard encryption.
+</Note>
+
+![image-placeholder: Account Setup]
+
+### Navigating the Dashboard
+
+Once logged in, you'll land on your ChatATP dashboard. Here's what you'll see:
+
+- **Sidebar Navigation** (Left):
+  - **Dashboard** - Overview of your agents and recent activity
+  - **Agents** - Create and manage your AI agents
+  - **ToolKits** - Browse and manage your ToolKit Collection
+  - **Integrations** - Manage connected services and API keys
+  - **Settings** - Account preferences and API configurations
+
+- **Main Content Area**:
+  - **Quick Actions** - Create new agents, browse ToolKits
+  - **Recent Agents** - Your most recently used AI agents
+  - **Activity Feed** - Recent interactions and usage stats
+
+- **Top Navigation**:
+  - **Search** - Find agents, ToolKits, or integrations quickly
+  - **Profile Menu** - Account settings, billing, and logout
+
+<Tip>
+  The dashboard adapts to your usage patterns - frequently used agents appear at the top for quick access.
+</Tip>
+
+---
+
+## Installing and Managing ToolKits
+
+ToolKits are packages of capabilities that extend your AI agents' abilities. They contain pre-built tools for common tasks like data analysis, API integrations, and automation.
+
+### Browsing the ToolKit Store
+
+The ToolKit Store is your gateway to discovering powerful capabilities:
+
+1. **Access the Store**: Click "ToolKits" in the sidebar, then "Browse Store"
+
+2. **Explore Categories**:
+   - **Productivity** - Email, calendar, task management
+   - **Business** - CRM, marketing, sales tools
+   - **Development** - Code generation, API testing
+   - **Data & Analytics** - Database queries, reporting
+   - **Communication** - Messaging, notifications
+
+3. **Search and Filter**:
+   - Use the search bar to find specific ToolKits
+   - Filter by category, popularity, or rating
+   - Sort by newest, most popular, or alphabetically
+
+4. **View Details**: Click on any ToolKit to see:
+   - Description and capabilities
+   - Required integrations
+   - Usage examples
+   - Developer information
+   - User reviews and ratings
+
+![image-placeholder: ToolKit Store]
+
+### Adding ToolKits to Your Collection
+
+Found a ToolKit you want to use? Here's how to add it:
+
+1. **Install ToolKit**: Click the "Add to Collection" button on the ToolKit's detail page
+
+2. **Review Permissions**: Some ToolKits may require specific integrations or API access
+
+3. **Confirm Installation**: The ToolKit is added to your personal collection
+
+<Note>
+  ToolKits are isolated and secure - they only access data you explicitly allow through integrations.
+</Note>
+
+### Understanding Private vs. Public ToolKits
+
+- **Public ToolKits**: Available to all ChatATP users, created by the community or official partners
+- **Private ToolKits**: Custom ToolKits you've created or have exclusive access to
+- **Premium ToolKits**: May require a subscription or one-time payment
+
+<CardGroup cols={2}>
+  <Card title="Public ToolKits" icon="globe">
+    Community-contributed tools available to everyone
+  </Card>
+  <Card title="Private ToolKits" icon="lock">
+    Custom tools for your specific use cases
+  </Card>
+</CardGroup>
+
+### Managing Your ToolKit Collection
+
+Your ToolKit Collection is your personal library of capabilities:
+
+- **View Installed ToolKits**: See all ToolKits you've added
+- **Enable/Disable**: Toggle ToolKits on/off for specific agents
+- **Update ToolKits**: Get the latest versions and features
+- **Remove ToolKits**: Uninstall ToolKits you no longer need
+
+<Tip>
+  Organize your ToolKits into categories or tag them for easy discovery later.
+</Tip>
+
+---
+
+## Connecting Integrations
+
+Integrations connect your AI agents to external services and APIs. ChatATP supports both OAuth-based integrations and custom API key connections.
+
+### Connecting Pre-built Integrations (OAuth)
+
+Many popular services offer one-click OAuth integration:
+
+1. **Browse Integrations**: Go to "Integrations" → "Available Integrations"
+
+2. **Choose a Service**:
+   - **Google Workspace** - Gmail, Calendar, Drive
+   - **HubSpot** - CRM and marketing tools
+   - **Slack** - Team communication
+   - **Salesforce** - Customer relationship management
+   - **Microsoft 365** - Outlook, Teams, OneDrive
+
+3. **OAuth Flow**:
+   - Click "Connect" on the integration
+   - Sign in to the service (if not already)
+   - Grant ChatATP the requested permissions
+   - Return to ChatATP (connection is saved)
+
+![image-placeholder: OAuth Integration Flow]
+
+4. **Verify Connection**: Check "Connected Accounts" to see active integrations
+
+<Note>
+  OAuth integrations automatically handle token refresh and security, so you don't need to worry about API keys expiring.
+</Note>
+
+### Connecting Custom Integrations (API Keys)
+
+For services that don't support OAuth or custom integrations:
+
+1. **Get Your API Key**: Obtain the API key from the service's developer dashboard
+
+2. **Add Integration**:
+   - Go to "Integrations" → "Custom Integrations"
+   - Click "Add Custom Integration"
+   - Enter the service name and API key
+   - Choose the appropriate authentication type
+
+3. **Test Connection**: ChatATP will verify the API key works correctly
+
+### Managing Connected Accounts
+
+Keep your integrations organized and secure:
+
+- **View All Connections**: See all active integrations in one place
+- **Test Connections**: Verify integrations are working properly
+- **Revoke Access**: Disconnect services you no longer need
+- **Update Permissions**: Modify what each integration can access
+
+<Warning>
+  Regularly review your connected accounts and revoke access for services you no longer use.
+</Warning>
+
+---
+
+## Setting Up LLM Provider Keys
+
+ChatATP works with multiple AI model providers. Add your own API keys to access premium models and control your usage costs.
+
+### Adding API Keys
+
+1. **Access Provider Settings**: Go to "Settings" → "LLM Providers"
+
+2. **Supported Providers**:
+   - **OpenAI** - GPT-4, GPT-3.5-turbo
+   - **Anthropic** - Claude 3 Opus, Sonnet, Haiku
+   - **Mistral AI** - Mistral Large, Medium, Small
+   - **Google** - Gemini Pro, Ultra
+
+3. **Add Your Key**:
+   - Get your API key from the provider's website
+   - Paste it into the appropriate field in ChatATP
+   - Test the connection
+
+![image-placeholder: LLM Provider Setup]
+
+### Choosing a Default Provider
+
+Set your preferred AI model for new agents:
+
+1. **Select Default**: Choose your preferred provider and model
+2. **Set Usage Limits**: Configure monthly spending limits if desired
+3. **Model Preferences**: Set fallback models for when your primary choice is unavailable
+
+<CardGroup cols={2}>
+  <Card title="OpenAI (GPT-4)" icon="robot">
+    Most popular for general tasks, creative writing, and complex reasoning
+  </Card>
+  <Card title="Anthropic (Claude 3)" icon="brain">
+    Excellent for analysis, coding, and following complex instructions
+  </Card>
+  <Card title="Mistral AI" icon="zap">
+    Fast and cost-effective for many use cases
+  </Card>
+</CardGroup>
+
+---
+
+## Using Agents
+
+AI Agents are where the magic happens. They combine your ToolKits, integrations, and LLM preferences to accomplish tasks.
+
+### Creating Your First Agent
+
+1. **Start Agent Builder**: Click "Agents" → "Create Agent"
+
+2. **Choose a Template** (Optional):
+   - **Customer Support**: Handle inquiries and tickets
+   - **Data Analyst**: Process and visualize data
+   - **Sales Assistant**: Manage leads and opportunities
+   - **Custom**: Build from scratch
+
+3. **Configure Your Agent**:
+   - **Name**: Give your agent a memorable name
+   - **Description**: What does this agent do?
+   - **ToolKits**: Select which ToolKits to enable
+   - **Integrations**: Choose connected services to access
+   - **LLM Provider**: Pick your preferred AI model
+
+![image-placeholder: Agent Builder]
+
+### Selecting ToolKits and LLMs
+
+Fine-tune your agent's capabilities:
+
+1. **Enable ToolKits**: Choose from your installed ToolKits
+2. **Set LLM Provider**: Select the AI model that best fits your use case
+3. **Configure Instructions**: Tell the agent how to behave and what to prioritize
+
+<Tip>
+  Start with a few ToolKits and add more as you discover what works best for your tasks.
+</Tip>
+
+### Example Use Cases
+
+#### Customer Support Agent
+
+**Setup**:
+- ToolKits: Help Desk, Knowledge Base, Email Integration
+- Integrations: Zendesk, Intercom, Gmail
+- LLM: Claude 3 (excellent for detailed responses)
+
+**Instructions**:
+```
+You are a helpful customer support agent. Always be polite and professional.
+Use the knowledge base to answer questions. Create tickets for complex issues.
+Escalate urgent matters to human support. Sign off with "Best regards, Support Bot"
+```
+
+#### Data Extraction Agent
+
+**Setup**:
+- ToolKits: Document Parser, Data Export, Spreadsheet Tools
+- Integrations: Google Drive, Dropbox
+- LLM: GPT-4 (good for structured data extraction)
+
+**Instructions**:
+```
+Extract key information from uploaded documents. Look for: names, dates, amounts, and key terms.
+Organize data into structured format. Export to CSV when requested.
+Ask clarifying questions if information is ambiguous.
+```
+
+#### Sales/CRM Automation Agent
+
+**Setup**:
+- ToolKits: Lead Scoring, Email Automation, CRM Integration
+- Integrations: HubSpot, Salesforce, LinkedIn
+- LLM: Claude 3 (good for relationship building)
+
+**Instructions**:
+```
+You help with sales outreach and lead management. Score leads based on engagement.
+Send personalized follow-up emails. Update CRM records with interaction notes.
+Suggest next steps for promising leads. Be professional but conversational.
+```
+
+#### Marketing Assistant
+
+**Setup**:
+- ToolKits: Content Generator, Social Media, Analytics
+- Integrations: Google Analytics, Twitter, LinkedIn
+- LLM: GPT-4 (creative and strategic)
+
+**Instructions**:
+```
+Create engaging marketing content. Analyze campaign performance.
+Suggest improvements based on data. Post to social media with approval.
+Maintain brand voice and messaging consistency.
+```
+
+#### Booking & Scheduling Assistant
+
+**Setup**:
+- ToolKits: Calendar Integration, Booking System, Notification Service
+- Integrations: Google Calendar, Calendly, Slack
+- LLM: Claude 3 (good for scheduling logic)
+
+**Instructions**:
+```
+Help users book appointments and manage schedules. Check availability before booking.
+Send confirmation emails and reminders. Handle rescheduling requests.
+Be polite and confirm all details before finalizing bookings.
+```
+
+### Testing and Refining Your Agent
+
+1. **Test with Sample Queries**: Try different types of requests to see how your agent responds
+
+2. **Review Conversations**: Check the chat history to see what worked well and what needs improvement
+
+3. **Refine Instructions**: Update your agent's instructions based on performance
+
+4. **Add More ToolKits**: Expand capabilities as you discover new needs
+
+<Note>
+  Agents learn from your feedback. Rate responses and provide corrections to improve future performance.
+</Note>
+
+### Sharing and Collaboration
+
+- **Share Agents**: Make agents available to team members
+- **Team Workspaces**: Collaborate on agent development
+- **Usage Analytics**: Track how agents are being used
+
+---
+
+## Best Practices
+
+### Security Tips
+- Regularly review and audit your connected integrations
+- Use strong, unique passwords for your ChatATP account
+- Enable two-factor authentication in Settings
+
+### Optimization Tips
+- Start simple and add complexity gradually
+- Test agents thoroughly before deploying for important tasks
+- Monitor usage costs and set appropriate limits
+
+### Getting Help
+- **Documentation**: Browse our complete docs for detailed guides
+- **Community**: Join discussions with other ChatATP users
+- **Support**: Contact our team for technical issues
+
+---
+
+## Next Steps
+
+Ready to dive deeper? Explore these resources:
+
+<CardGroup cols={2}>
+  <Card title="Advanced Agent Building" icon="cogs">
+    Learn advanced techniques for building powerful agents
+  </Card>
+  <Card title="ToolKit Development" icon="code">
+    Create your own custom ToolKits
+  </Card>
+  <Card title="API Documentation" icon="book">
+    Integrate ChatATP with your own applications
+  </Card>
+  <Card title="Community Examples" icon="users">
+    See how others are using ChatATP
+  </Card>
+</CardGroup>
+
+Happy automating! 🚀
