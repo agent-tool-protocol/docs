@@ -32,17 +32,14 @@
                   "account-setup/connecting-llm-provider",
                   "account-setup/connecting-oauth-integrations",
                   "account-setup/adding-custom-integrations",
-                  "account-setup/installing-toolkits",
-                  "account-setup/managing-agents"
+                  "account-setup/installing-toolkits"
                 ]
               },
               {
                 "group": "Use Cases",
                 "pages": [
-                  "use-cases/sales-assistant",
-                  "use-cases/marketing-assistant",
-                  "use-cases/customer-support",
-                  "use-cases/data-automation"
+                  "use-cases/chatatp-as-sales-assistant",
+                  "use-cases/chat-atp-as-marketing-assistant"
                 ]
               },
               "troubleshooting"
@@ -56,9 +53,7 @@
                 "pages": [
                   "building-with-atp/introduction",
                   "building-with-atp/toolkit-client",
-                  "building-with-atp/llm-client",
-                  "building-with-atp/tool-schema",
-                  "building-with-atp/websocket-execution"
+                  "building-with-atp/llm-client"
                 ]
               },
               {
