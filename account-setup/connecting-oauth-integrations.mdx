@@ -1,0 +1,77 @@
+---
+title: "Connecting OAuth Integrations"
+description: "Connect external services using OAuth2 for seamless agent access"
+---
+
+# Connecting OAuth Integrations
+
+OAuth integrations allow your agents to securely access external services and APIs without exposing sensitive credentials.
+
+## Supported OAuth Providers
+
+ATP supports OAuth integration with popular business platforms:
+
+- **Salesforce** - Access CRM data and sales information
+- **HubSpot** - Marketing and sales automation data
+- **Slack** - Team communication and notifications
+- **Google Workspace** - Gmail, Drive, Calendar, Sheets
+- **Microsoft 365** - Outlook, Teams, OneDrive
+- **Notion** - Workspace and knowledge base access
+- **Airtable** - Database and spreadsheet operations
+
+## Setting Up OAuth Integration
+
+### Step 1: Register OAuth Application
+
+1. Go to your target service's developer console
+2. Create a new OAuth application
+3. Set the redirect URI to: `https://platform.chat-atp.com/oauth/callback`
+
+<img src="/images/account-setup/oauth-app-registration.svg" alt="OAuth application registration" />
+
+### Step 2: Configure in ATP
+
+1. In ATP Platform, go to **Settings** > **OAuth Integrations**
+2. Click **"Add Integration"**
+3. Select your service from the list
+4. Enter the Client ID and Client Secret from your OAuth app
+
+### Step 3: Authorize Access
+
+1. Click **"Connect"** to start the OAuth flow
+2. You'll be redirected to the service's authorization page
+3. Grant the requested permissions
+4. Return to ATP Platform - integration is now active
+
+<img src="/images/account-setup/oauth-authorization.svg" alt="OAuth authorization flow" />
+
+## Managing Permissions
+
+Each integration requires specific permissions (scopes):
+
+- **Read-only**: View data without modifications
+- **Read/Write**: Full access to create, update, and delete
+- **Admin**: Access to user management and settings
+
+Review and approve the requested scopes during authorization.
+
+## Integration Status
+
+Monitor your integrations in the ATP dashboard:
+
+- **Active**: Successfully connected and working
+- **Error**: Authentication issues or expired tokens
+- **Pending**: Awaiting re-authorization
+
+## Revoking Access
+
+To disconnect an integration:
+
+1. Go to **Settings** > **OAuth Integrations**
+2. Find the integration and click **"Revoke"**
+3. Confirm the disconnection
+4. Optionally delete the OAuth app from the service's console
+
+## Next Steps
+
+With OAuth integrations configured, you can now [add custom integrations](/account-setup/adding-custom-integrations) for services that don't support OAuth.

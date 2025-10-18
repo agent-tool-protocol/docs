@@ -1,0 +1,66 @@
+---
+title: "Connecting LLM Provider (API Key)"
+description: "Connect your preferred LLM provider using API keys"
+---
+
+# Connecting LLM Provider (API Key)
+
+ATP supports integration with multiple leading language model providers. Connect your preferred provider to enable your agents to access powerful AI capabilities.
+
+## Supported LLM Providers
+
+ATP currently supports the following providers:
+
+- **OpenAI** (GPT-3.5, GPT-4, GPT-4 Turbo)
+- **Anthropic** (Claude, Claude Instant)
+- **Mistral AI** (Mistral models)
+- **Groq** (Fast inference models)
+- **Google Gemini** (Gemini Pro, Gemini Pro Vision)
+
+## Connecting via API Key
+
+### Step 1: Get Your API Key
+
+1. Visit your provider's developer console
+2. Navigate to API Keys or Access Tokens section
+3. Create a new API key for ATP usage
+
+<img src="/images/account-setup/api-key-generation.svg" alt="API key generation process" />
+
+### Step 2: Add to ATP Platform
+
+1. Log into the [ATP Platform](https://platform.chat-atp.com)
+2. Navigate to **Settings** > **LLM Providers**
+3. Click **"Add Provider"**
+4. Select your provider from the dropdown
+5. Enter your API key securely
+
+### Step 3: Test Connection
+
+After adding your API key:
+
+1. Click the **"Test Connection"** button
+2. ATP will verify the key is valid and accessible
+3. You'll see a success message if everything is configured correctly
+
+<img src="/images/account-setup/connection-test.svg" alt="Testing LLM provider connection" />
+
+## Security Best Practices
+
+- Store API keys securely and never share them
+- Use environment variables in production environments
+- Rotate API keys regularly
+- Monitor API usage through your provider's dashboard
+
+## Troubleshooting
+
+If you encounter connection issues:
+
+- Verify the API key is correct and active
+- Check that you haven't exceeded rate limits
+- Ensure your account has sufficient credits/billing
+- Contact support if issues persist
+
+## Next Steps
+
+With your LLM provider connected, you can now [connect OAuth integrations](/account-setup/connecting-oauth-integrations) to give your agents access to external services.

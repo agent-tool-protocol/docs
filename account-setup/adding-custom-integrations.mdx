@@ -1,0 +1,93 @@
+---
+title: "Adding Custom Integrations (API Key)"
+description: "Connect services that don't support OAuth using API keys"
+---
+
+# Adding Custom Integrations (API Key)
+
+For services that don't support OAuth or when you need more control over authentication, you can add custom integrations using API keys.
+
+## When to Use Custom Integrations
+
+Custom integrations are ideal for:
+
+- **Legacy systems** without OAuth support
+- **Internal APIs** requiring specific authentication
+- **Services with API key authentication**
+- **Custom webhook endpoints**
+
+## Supported Authentication Methods
+
+ATP supports various authentication methods:
+
+- **API Key**: Simple token-based authentication
+- **Bearer Token**: JWT or similar token authentication
+- **Basic Auth**: Username/password authentication
+- **Custom Headers**: Any custom authentication headers
+
+## Adding a Custom Integration
+
+### Step 1: Gather API Credentials
+
+Collect the necessary authentication information:
+
+- API endpoint URL
+- Authentication method
+- Credentials (API key, token, username/password)
+- Required headers or parameters
+
+<img src="/images/account-setup/custom-integration-credentials.svg" alt="Gathering API credentials" />
+
+### Step 2: Configure in ATP
+
+1. Navigate to **Settings** > **Custom Integrations**
+2. Click **"Add Custom Integration"**
+3. Provide a descriptive name for the integration
+4. Enter the base API URL
+
+### Step 3: Set Authentication
+
+Choose your authentication method and enter the credentials:
+
+- For **API Key**: Select header or query parameter method
+- For **Bearer Token**: Enter the token value
+- For **Basic Auth**: Provide username and password
+
+<img src="/images/account-setup/custom-auth-config.svg" alt="Configuring custom authentication" />
+
+### Step 4: Test the Integration
+
+1. Click **"Test Connection"** to verify the setup
+2. ATP will make a test request to ensure connectivity
+3. Check the response to confirm everything is working
+
+## Managing Custom Integrations
+
+### Available Operations
+
+Once configured, you can:
+
+- **View integration status** in the dashboard
+- **Update credentials** when tokens expire
+- **Test connectivity** to ensure uptime
+- **Delete integrations** no longer needed
+
+### Security Considerations
+
+- Store API keys securely in ATP's encrypted storage
+- Use read-only keys when possible
+- Regularly rotate API keys
+- Monitor API usage for anomalies
+
+## Troubleshooting Custom Integrations
+
+Common issues and solutions:
+
+- **Authentication failed**: Verify credentials are correct and active
+- **Connection timeout**: Check network connectivity and API availability
+- **Invalid response**: Ensure the API endpoint is correct
+- **Rate limiting**: Implement proper rate limiting in your agent logic
+
+## Next Steps
+
+With custom integrations configured, you can now [install toolkits](/account-setup/installing-toolkits) to extend your agents' capabilities with pre-built tools.

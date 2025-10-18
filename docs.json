@@ -17,37 +17,85 @@
             "group": "Getting Started",
             "pages": [
               "index",
-              "quickstart",
-              "user-guide",
-              "development"
+              "platform-overview",
+              "core-concepts",
+              "quickstart"
             ]
           },
           {
-            "group": "SDK Reference",
+            "group": "For Users",
             "pages": [
-              "sdk/toolkit-client",
-              "sdk/llm-client"
+              {
+                "group": "Account Setup",
+                "pages": [
+                  "account-setup/creating-account",
+                  "account-setup/connecting-llm-provider",
+                  "account-setup/connecting-oauth-integrations",
+                  "account-setup/adding-custom-integrations",
+                  "account-setup/installing-toolkits",
+                  "account-setup/managing-agents"
+                ]
+              },
+              {
+                "group": "Use Cases",
+                "pages": [
+                  "use-cases/sales-assistant",
+                  "use-cases/marketing-assistant",
+                  "use-cases/customer-support",
+                  "use-cases/data-automation"
+                ]
+              },
+              "troubleshooting"
             ]
           },
           {
-            "group": "Guides",
+            "group": "For Developers",
             "pages": [
-              "guides/oauth"
-            ]
-          },
-          {
-            "group": "Framework Integration",
-            "pages": [
-              "integrations/overview",
-              "integrations/django",
-              "integrations/fastapi",
-              "integrations/flask"
-            ]
-          },
-          {
-            "group": "Examples",
-            "pages": [
-              "examples/overview"
+              {
+                "group": "Building with ATP",
+                "pages": [
+                  "building-with-atp/introduction",
+                  "building-with-atp/toolkit-client",
+                  "building-with-atp/llm-client",
+                  "building-with-atp/tool-schema",
+                  "building-with-atp/websocket-execution"
+                ]
+              },
+              {
+                "group": "Framework Integration",
+                "pages": [
+                  "framework-integration/django",
+                  "framework-integration/fastapi",
+                  "framework-integration/flask"
+                ]
+              },
+              {
+                "group": "LLM + Platform Examples",
+                "pages": [
+                  "examples/openai-salesforce",
+                  "examples/mistral-hubspot",
+                  "examples/anthropic-slack",
+                  "examples/groq-custom-crm",
+                  "examples/multi-llm-agents"
+                ]
+              },
+              {
+                "group": "OAuth2 & Auth Config",
+                "pages": [
+                  "oauth-config/registering-oauth-apps",
+                  "oauth-config/managing-scopes-tokens",
+                  "oauth-config/platform-ids-auth-flow"
+                ]
+              },
+              {
+                "group": "Advanced Topics",
+                "pages": [
+                  "advanced-topics/multi-agent-coordination",
+                  "advanced-topics/context-propagation",
+                  "advanced-topics/error-handling-observability",
+                  "advanced-topics/deployment-patterns"
+                ]
+              }
             ]
           }
         ]

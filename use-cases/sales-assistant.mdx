@@ -1,0 +1,152 @@
+---
+title: "Sales Assistant Agent"
+description: "Automate sales processes and customer interactions with intelligent agents"
+---
+
+# Sales Assistant Agent
+
+Transform your sales process with an AI-powered sales assistant that can handle lead qualification, follow-ups, and customer relationship management.
+
+## Use Case Overview
+
+Sales Assistant Agents automate repetitive sales tasks while maintaining personalized customer interactions. They can:
+
+- **Qualify leads** based on criteria and responses
+- **Schedule meetings** and manage calendar bookings
+- **Follow up** on proposals and quotes
+- **Update CRM** records automatically
+- **Generate reports** on sales activities
+
+<img src="/images/use-cases/sales-assistant-overview.svg" alt="Sales Assistant Agent workflow" />
+
+## Key Features
+
+### Lead Qualification
+
+The agent can ask qualifying questions and score leads:
+
+```
+Agent: "What is the size of your company?"
+Lead: "We have about 150 employees"
+Agent: "What's your current annual revenue range?"
+Lead: "$10M-$25M"
+Agent: "What are your main challenges with [product/service]?"
+```
+
+### Automated Follow-ups
+
+- Send personalized email sequences
+- Schedule reminder calls
+- Track engagement and responses
+- Escalate hot leads to sales team
+
+### CRM Integration
+
+- Automatically log all interactions
+- Update lead status and scores
+- Create tasks for sales representatives
+- Generate activity reports
+
+## Implementation Example
+
+### Agent Configuration
+
+```json
+{
+  "name": "Sales Assistant",
+  "llm_provider": "openai",
+  "model": "gpt-4",
+  "integrations": [
+    "salesforce",
+    "gmail",
+    "calendar"
+  ],
+  "tools": [
+    "lead_scoring",
+    "email_automation",
+    "crm_updates"
+  ]
+}
+```
+
+### Sample Conversation Flow
+
+```
+Customer: "I'm interested in your enterprise solution"
+
+Agent: "Great! I'd be happy to help you explore our enterprise offerings.
+          What specific challenges are you looking to solve?"
+
+Customer: "We need better project management capabilities"
+
+Agent: "Excellent! Our enterprise solution includes advanced project
+          management tools. What's the size of your organization?"
+
+Customer: "We have 200 employees"
+
+Agent: "Perfect! Based on your needs and company size, you're an ideal
+          fit for our enterprise plan. Would you like me to schedule a
+          demo call with our solutions consultant?"
+```
+
+## Benefits
+
+### For Sales Teams
+
+- **24/7 availability** for lead responses
+- **Consistent messaging** across all touchpoints
+- **Faster lead qualification** and routing
+- **Reduced administrative tasks**
+
+### For Customers
+
+- **Instant responses** to inquiries
+- **Personalized recommendations** based on needs
+- **Seamless handoff** to human representatives
+- **Better overall experience**
+
+## Setup Requirements
+
+### Required Integrations
+
+- **CRM system** (Salesforce, HubSpot, etc.)
+- **Email provider** (Gmail, Outlook, etc.)
+- **Calendar system** for meeting scheduling
+
+### Recommended Tools
+
+- Lead scoring algorithms
+- Email template management
+- Meeting scheduling automation
+- CRM field mapping
+
+## Best Practices
+
+### Agent Training
+
+- **Define clear qualification criteria** for leads
+- **Create comprehensive response templates**
+- **Set up proper escalation paths** for complex inquiries
+- **Regularly update knowledge base** with new product information
+
+### Performance Monitoring
+
+- Track conversion rates from agent interactions
+- Monitor customer satisfaction scores
+- Analyze common questions and pain points
+- Continuously refine agent responses
+
+## ROI Impact
+
+Organizations typically see:
+
+- **40% reduction** in lead response time
+- **25% increase** in qualified leads
+- **30% improvement** in sales team productivity
+- **Higher customer satisfaction** scores
+
+<img src="/images/use-cases/sales-assistant-roi.svg" alt="Sales Assistant ROI metrics" />
+
+## Next Steps
+
+Ready to implement a Sales Assistant? Check out our [Marketing Assistant Agent](/use-cases/marketing-assistant) for complementary marketing automation capabilities.
