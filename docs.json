@@ -17,8 +17,6 @@
             "group": "Getting Started",
             "pages": [
               "index",
-              "platform-overview",
-              "core-concepts",
               "quickstart"
             ]
           },
@@ -51,7 +49,6 @@
               {
                 "group": "Building with ATP",
                 "pages": [
-                  "building-with-atp/introduction",
                   "building-with-atp/toolkit-client",
                   "building-with-atp/llm-client"
                 ]
@@ -105,7 +102,7 @@
         },
         {
           "anchor": "Community",
-          "href": "https://github.com/sam-14uel/Agent-Tool-Protocol/discussions",
+          "href": "https://github.com/agent-tool-protocol/python-sdk/discussions",
           "icon": "comments"
         },
         {
@@ -136,7 +133,7 @@
   "footer": {
     "socials": {
       "x": "https://x.com/chatatpai",
-      "github": "https://github.com/sam-14uel/Agent-Tool-Protocol",
+      "github": "https://github.com/agent-tool-protocol/",
       "linkedin": "https://linkedin.com/company/chatatp"
     }
   }
