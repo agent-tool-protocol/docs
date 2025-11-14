@@ -9,39 +9,33 @@ OAuth integrations allow your agents to securely access external services and AP
 
 ## Supported OAuth Providers
 
-ATP supports OAuth integration with popular business platforms:
+ChatATP supports OAuth integration with popular business platforms:
 
 - **Salesforce** - Access CRM data and sales information
 - **HubSpot** - Marketing and sales automation data
 - **Slack** - Team communication and notifications
-- **Google Workspace** - Gmail, Drive, Calendar, Sheets
-- **Microsoft 365** - Outlook, Teams, OneDrive
 - **Notion** - Workspace and knowledge base access
 - **Airtable** - Database and spreadsheet operations
+- **Asana** - Project and task management
+- **Linear** - Project and task management
+- **Atlassian Jira** - Project and task management
 
 ## Setting Up OAuth Integration
 
-### Step 1: Register OAuth Application
+### Step 1: Connect OAuth Application
 
-1. Go to your target service's developer console
-2. Create a new OAuth application
-3. Set the redirect URI to: `https://platform.chat-atp.com/oauth/callback`
+1. Go to Account > Tap on Integrations Tab
+2. Click **"Add Integration"** to open the OAuth integration dialogue
 
-<img src="/images/account-setup/oauth-app-registration.svg" alt="OAuth application registration" />
 
-### Step 2: Configure in ATP
+<img src="/images/account-setup/oauth-integration.svg" alt="OAuth integration dialogue" />
 
-1. In ATP Platform, go to **Settings** > **OAuth Integrations**
-2. Click **"Add Integration"**
-3. Select your service from the list
-4. Enter the Client ID and Client Secret from your OAuth app
+### Step 2: Authorize Access
 
-### Step 3: Authorize Access
-
-1. Click **"Connect"** to start the OAuth flow
+1. Click the connect button for the OAuth service you want to connect to start the authorization flow, such as Salesforce, HubSpot, Slack, Notion, Airtable, Asana, Linear, or Atlassian Jira from the App Marketplace
 2. You'll be redirected to the service's authorization page
 3. Grant the requested permissions
-4. Return to ATP Platform - integration is now active
+4. You will be redirected back to ChatATP
 
 <img src="/images/account-setup/oauth-authorization.svg" alt="OAuth authorization flow" />
 
@@ -57,7 +51,7 @@ Review and approve the requested scopes during authorization.
 
 ## Integration Status
 
-Monitor your integrations in the ATP dashboard:
+Monitor your integrations in the ChatATP Account Section:
 
 - **Active**: Successfully connected and working
 - **Error**: Authentication issues or expired tokens
@@ -67,10 +61,9 @@ Monitor your integrations in the ATP dashboard:
 
 To disconnect an integration:
 
-1. Go to **Settings** > **OAuth Integrations**
-2. Find the integration and click **"Revoke"**
+1. Go to Account > Tap on Integrations Tab
+2. Find the integration and click **"Disconnect"**
 3. Confirm the disconnection
-4. Optionally delete the OAuth app from the service's console
 
 ## Next Steps
 
