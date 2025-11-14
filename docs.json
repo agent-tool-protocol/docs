@@ -47,7 +47,7 @@
             "group": "For Developers",
             "pages": [
               {
-                "group": "Building with ATP",
+                "group": "Building with ChatATP",
                 "pages": [
                   "building-with-atp/toolkit-client",
                   "building-with-atp/llm-client"
